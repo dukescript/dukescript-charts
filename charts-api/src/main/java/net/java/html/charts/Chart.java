@@ -26,6 +26,7 @@ package net.java.html.charts;
  * #L%
  */
 
+import java.util.ArrayList;
 import java.util.List;
 import net.java.html.js.JavaScriptBody;
 import net.java.html.js.JavaScriptResource;
@@ -48,20 +49,38 @@ import net.java.html.js.JavaScriptResource;
  */
 @JavaScriptResource("Chart.min.js")
 public final class Chart<D, C extends Config> {
-    private final Object chart;
+    private final C config;
+    private final Values.Set[] dataSets;
+    private final List<D> data;
+    private Object chart;
     private ChartListener listener;
 
-    private Chart(String id, String fnName, Object js) {
-        this.chart = js;
-        addListener(id, fnName, chart);
+    private Chart(C config, Values.Set[] dataSets) {
+        this.config = config;
+        this.data = new ArrayList<>();
+        this.dataSets = dataSets;
     }
 
     /** Associates the chart with an element on the page. This method
      * can be called just once. If used twice, it throws an exception.
      *
      * @param id the id of the element to place the chart to
+     * @throws IllegalStateException if already applied to some element
      */
     public void applyTo(String id) {
+        if (chart != null) {
+            throw new IllegalStateException("Already initialized");
+        }
+        Values.Set ds = dataSets[0];
+        Values[] arr = data.toArray(new Values[0]);
+        String[] names = new String[arr.length];
+        double[] values = new double[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            names[i] = arr[i].label;
+            values[i] = arr[i].values[0];
+        }
+        this.chart = initLine(id, ds.label, names, values);
+//        addListener(id, fnName, chart);
     }
 
     /** Adds a listener to the chart.
@@ -85,7 +104,7 @@ public final class Chart<D, C extends Config> {
      * @return non-<code>null</code> configuration object for this chart
      */
     public C getConfig() {
-        return null;
+        return config;
     }
 
     /** The data displayed by this graph. One can change the data,
@@ -94,7 +113,7 @@ public final class Chart<D, C extends Config> {
      * @return
      */
     public List<D> getData() {
-        return null;
+        return data;
     }
 
     /**
@@ -111,7 +130,7 @@ public final class Chart<D, C extends Config> {
     // Chart.getData() -> List<Values>
 
     public static Chart<Values, Config> createLine(Values.Set... dataSets) {
-        return null;
+        return new Chart<>(new Config(), dataSets);
     }
     public static Chart<Values, Config> createRadar(Values.Set... dataSets) {
         return null;
@@ -268,7 +287,7 @@ public final class Chart<D, C extends Config> {
         "});\n" +
         "return graph;\n"
     )
-    native static Object initLine(String id, String name, String[] names, Object[] values);
+    native static Object initLine(String id, String name, String[] names, double[] values);
 
 
     @JavaScriptBody(args = { "type", "id", "name", "names", "values", "colors", "highlights" }, body =
@@ -295,6 +314,7 @@ public final class Chart<D, C extends Config> {
     )
     native static Object addData(Object js, Object[] data, String title);
 
+    /*
     static Chart createBar(String id, List<? extends Number> values) {
         Number[] valArr = values.toArray(new Number[0]);
         String[] names = new String[valArr.length];
@@ -322,4 +342,5 @@ public final class Chart<D, C extends Config> {
         }
         return new Chart(id, "getSegmentsAtEvent", init360(type, id, "Test", names, valArr, colors, colors));
     }
+    */
 }

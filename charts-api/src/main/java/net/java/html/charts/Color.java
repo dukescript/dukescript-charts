@@ -29,6 +29,35 @@ package net.java.html.charts;
 /** Represents a color.
  */
 public final class Color {
-    private Color() {
+    final String color;
+
+    private Color(String color) {
+        this.color = color;
     }
+
+    public static Color rgba(int red, int green, int blue, double alpha) {
+        rgbRange(red);
+        rgbRange(green);
+        rgbRange(blue);
+        alphaRange(alpha);
+        return new Color("rgba(" + red +"," + green + "," + blue + "," + alpha + ")");
+    }
+
+    @Override
+    public String toString() {
+        return color;
+    }
+
+    private static void alphaRange(double alpha) {
+        if (alpha < 0.0 || alpha > 1.0) {
+            throw new IllegalStateException("Alpha out of range: " + alpha);
+        }
+    }
+
+    private static void rgbRange(int component) {
+        if (component < 0 || component > 255) {
+            throw new IllegalStateException("RGB component out of range: " + component);
+        }
+    }
+
 }

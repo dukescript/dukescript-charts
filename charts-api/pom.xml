@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dukescript.charts</groupId>
     <artifactId>charts-api</artifactId>
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
     <parent>
         <groupId>com.dukescript.charts</groupId>
         <artifactId>pom</artifactId>
@@ -20,10 +20,75 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.html</groupId>
+            <artifactId>net.java.html.boot.fx</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
     </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>2.5.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Eclipse-BuddyPolicy>dependent</Eclipse-BuddyPolicy>
+                        <Export-Package>net.java.html.charts</Export-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.netbeans.html</groupId>
+                <artifactId>html4j-maven-plugin</artifactId>
+                <version>${net.java.html.version}</version>
+                <executions>
+                    <execution>
+                        <id>js-classes</id>
+                        <goals>
+                            <goal>process-js-annotations</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apidesign.bck2brwsr</groupId>
+                <artifactId>bck2brwsr-maven-plugin</artifactId>
+                <version>${bck2brwsr.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>library</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.18.1</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

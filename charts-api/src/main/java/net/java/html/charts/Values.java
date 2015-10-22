@@ -29,15 +29,24 @@ package net.java.html.charts;
 /** Values graph.
  */
 public final class Values {
+    final String label;
+    final double[] values;
     public Values(String label, double... values) {
+        this.label = label;
+        this.values = values;
     }
 
     /** Set of {@link Values values} for line and radar charts.
      */
     public static final class Set {
+        final String label;
+        final Color fillColor;
+        final Color strokeColor;
 
         public Set(String label, Color fillColor, Color strokeColor) {
-            super();
+            this.label = label;
+            this.fillColor = fillColor;
+            this.strokeColor = strokeColor;
         }
     }
 }
