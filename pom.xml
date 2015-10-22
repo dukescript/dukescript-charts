@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">  
+    <modelVersion>4.0.0</modelVersion>
+    
+    <name>DukeScript Charts</name>
+    <groupId>com.dukescript.charts</groupId>
+    <artifactId>pom</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <url>http://dukescript.com</url>
+    <description>A Java API for drawing charts</description>
+    
+    <developers>
+        <developer>
+            <id>monacotoni</id>
+            <name>Anton Epple</name>
+            <email>toni.epple@dukescript.com</email>
+            <organization>Dukehoff GmbH</organization>
+            <organizationUrl>http://www.dukescript.com</organizationUrl>
+            <roles>
+                <role>Project-Administrator</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <comments>
+                Charts API is free to use with the MIT license.
+            </comments>
+        </license>
+    </licenses>
+    
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <net.java.html.version>1.2.3</net.java.html.version>
+        <bck2brwsr.version>0.16</bck2brwsr.version>
+        <license>COPYING</license>
+    </properties>
+   
+    <scm>
+        <connection>scm:git:https://github.com/dukescript/dukescript-charts.git</connection>
+        <url>https://github.com/dukescript/dukescript-charts.git</url>
+        <developerConnection>scm:git:https://github.com/dukescript/dukescript-charts.git</developerConnection>
+        <tag>release-${releaseVersion}</tag>
+    </scm>
+    
+    <repositories>
+        <repository>
+            <id>netbeans</id>
+            <name>NetBeans</name>
+            <url>http://bits.netbeans.org/maven2/</url>
+        </repository>
+    </repositories>
+    
+    <modules>
+        <module>charts-api</module>
+    </modules>
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <scope>test</scope>
+                <version>6.8.21</version>
+                <exclusions>
+                    <exclusion>
+                        <artifactId>junit</artifactId>
+                        <groupId>junit</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <subpackages>${publicPackages}</subpackages>
+                    <skip>false</skip>
+                    <includes>net/java/html/**.java</includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <localCheckout>true</localCheckout>
+                    <pushChanges>false</pushChanges>
+                    <useReleaseProfile>false</useReleaseProfile>
+                    <arguments>-Pjvnet-release -Pgpg</arguments>
+                    <tag>release-${releaseVersion}</tag>
+                </configuration>
+            </plugin>      
+        </plugins>
+    </build>
+    <profiles> 
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>license</id>
+            <activation>
+                <property>
+                    <name>!skipLicenses</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <configuration>
+                            <inceptionYear>2015</inceptionYear>
+                            <organizationName>Dukehoff GmbH</organizationName>
+                            <licenseName>mit</licenseName>
+                            <failOnMissingHeader>true</failOnMissingHeader>
+                            <descriptionTemplate>src/license/header.txt</descriptionTemplate>
+                            <roots>
+                                <root>src</root>
+                            </roots>  
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>first</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <licenseName>mit</licenseName>
+                                    <roots>
+                                        <root>src</root>
+                                    </roots>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check-file-header</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
+</project>
