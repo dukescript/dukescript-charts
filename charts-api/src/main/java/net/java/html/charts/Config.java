@@ -29,8 +29,8 @@ package net.java.html.charts;
 import net.java.html.js.JavaScriptBody;
 
 /**
- * Configuration object for the charts. Generic configuration object
- * that allows to set any property via {@link #set(java.lang.String, java.lang.Object)}
+ * Generic configuration object.
+ * Allows to set any property via {@link #set(java.lang.String, java.lang.Object)}
  * method. The list of supported properties is available at
  * <a href="http://www.chartjs.org/docs/#getting-started-global-chart-configuration">
  * Global Chart Configuration</a>.

@@ -26,7 +26,9 @@ package net.java.html.charts;
  * #L%
  */
 
-public class Color {
+/** Represents a color.
+ */
+public final class Color {
     private Color() {
     }
 }

@@ -28,6 +28,9 @@ package net.java.html.charts;
 
 import java.util.EventObject;
 
+/** Event describing what happened in {@link Chart}. Delivered to
+ * {@link ChartListener} methods.
+ */
 public final class ChartEvent extends EventObject{
 
     private final String label;
@@ -39,10 +42,16 @@ public final class ChartEvent extends EventObject{
         this.value = value;
     }
 
+    /** Name of the object where the action happened.
+     * @return name
+     */
     public String getLabel() {
         return label;
     }
 
+    /** Value of the object when the action happened.
+     * @return the value
+     */
     public double getValue() {
         return value;
     }

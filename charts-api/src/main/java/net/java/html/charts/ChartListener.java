@@ -28,7 +28,12 @@ package net.java.html.charts;
 
 import java.util.EventListener;
 
-
+/** Listener to deliver events about user interaction with the
+ * {@link Chart}.
+ */
 public interface ChartListener extends EventListener {
+    /** Delivered when user clicks on the chart
+     * @param ev event describing what happened
+     */
     public void chartClick(ChartEvent ev);
 }

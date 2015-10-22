@@ -32,42 +32,12 @@ public final class Values {
     public Values(String label, double... values) {
     }
 
-    // Chart.getData() -> List<Values>
+    /** Set of {@link Values values} for line and radar charts.
+     */
+    public static final class Set {
 
-    public static Chart<Values> createLine(Config options, DataSet... dataSets) {
-        return null;
-    }
-    public static Chart<Values> createRadar(Config options, DataSet... dataSets) {
-        return null;
-    }
-
-    /*
-    // line:
-    // radar:
-
-            {
-            label: "My Second dataset",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: [28, 48, 40, 19, 86, 27, 90]
+        public Set(String label, Color fillColor, Color strokeColor) {
+            super();
         }
-
-    public static Chart<Values> createBar(Config options, DataSet... dataSets) {
-        return null;
     }
-
-    // bar:
-            {
-            label: "My Second dataset",
-            fillColor: "rgba(151,187,205,0.5)",
-            strokeColor: "rgba(151,187,205,0.8)",
-            highlightFill: "rgba(151,187,205,0.75)",
-            highlightStroke: "rgba(151,187,205,1)",
-            data: [28, 48, 40, 19, 86, 27, 90]
-        }
-*/
 }

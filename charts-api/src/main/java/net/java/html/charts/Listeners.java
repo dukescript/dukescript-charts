@@ -30,6 +30,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/** Listener support class.
+ */
 final class Listeners implements ChartListener {
     final ChartListener listener;
     final Listeners next;
