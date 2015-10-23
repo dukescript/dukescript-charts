@@ -32,6 +32,15 @@ package net.java.html.charts;
  * {@link Chart#createPie()} factory methods.
  */
 public final class Segment {
-    public Segment(double value, Color color, Color highlight, String label) {
+    final String label;
+    final double value;
+    final Color color;
+    final Color highlight;
+
+    public Segment(String label, double value, Color color, Color highlight) {
+        this.label = label;
+        this.value = value;
+        this.color = color;
+        this.highlight = highlight;
     }
 }

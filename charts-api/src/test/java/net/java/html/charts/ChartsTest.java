@@ -47,6 +47,7 @@ public class ChartsTest implements Runnable {
 
     @BeforeMethod
     public void initializePresenter() throws InterruptedException {
+        animationComplete = false;
         final CountDownLatch initialized = new CountDownLatch(1);
         final BrowserBuilder builder = BrowserBuilder.newBrowser().
             loadPage("charts.html").
@@ -137,6 +138,79 @@ public class ChartsTest implements Runnable {
             }
         });
 
+        waitForAnimation();
+    }
+
+    @Test
+    public void pieChart() throws Exception {
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                Chart<Segment, Config> pieChart = Chart.createPie();
+                pieChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
+
+                pieChart.getData().addAll(Arrays.asList(
+                    new Segment("red", 25, Color.rgba(128, 0, 0, 1), Color.rgba(255, 0, 0, 0.5)),
+                    new Segment("green", 33, Color.rgba(0, 128, 0, 1), Color.rgba(0, 255, 0, 0.5)),
+                    new Segment("blue", 42, Color.rgba(0, 0, 255, 1), Color.rgba(0, 0, 255, 0.5))
+                ));
+
+                pieChart.applyTo("pieChart");
+
+                chart = pieChart;
+                return null;
+            }
+        });
+
+        waitForAnimation();
+    }
+
+    @Test
+    public void doughtnutChart() throws Exception {
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                Chart<Segment, Config> pieChart = Chart.createDoughnut();
+                pieChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
+
+                pieChart.getData().addAll(Arrays.asList(
+                    new Segment("red", 25, Color.rgba(128, 0, 0, 0), Color.rgba(255, 0, 0, 0)),
+                    new Segment("green", 33, Color.rgba(0, 128, 0, 0), Color.rgba(0, 255, 0, 0)),
+                    new Segment("blue", 42, Color.rgba(0, 0, 255, 0), Color.rgba(0, 0, 255, 0))
+                ));
+
+                pieChart.applyTo("doughnutChart");
+
+                chart = pieChart;
+                return null;
+            }
+        });
+
+        waitForAnimation();
+    }
+
+    @Test
+    public void polarChart() throws Exception {
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                Chart<Segment, Config> polarChart = Chart.createPolar();
+                polarChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
+
+                polarChart.getData().addAll(Arrays.asList(
+                    new Segment("Red", 300, Color.valueOf("#F7464A"), Color.valueOf("#FF5A5E")),
+                    new Segment("Green", 50, Color.valueOf("#46BFBD"), Color.valueOf("#5AD3D1")),
+                    new Segment("Yello", 100, Color.valueOf("#FDB45C"), Color.valueOf("#FFC870")),
+                    new Segment("Grey", 40, Color.valueOf("#949FB1"), Color.valueOf("#A8B3C5")),
+                    new Segment("Dark Grey", 120, Color.valueOf("#4D5360"), Color.valueOf("#616774"))
+                ));
+
+                polarChart.applyTo("polarChart");
+
+                chart = polarChart;
+                return null;
+            }
+        });
         waitForAnimation();
     }
 

@@ -43,6 +43,10 @@ public final class Color {
         return new Color("rgba(" + red +"," + green + "," + blue + "," + alpha + ")");
     }
 
+    public static Color valueOf(String color) {
+        return new Color(color);
+    }
+
     @Override
     public String toString() {
         return color;

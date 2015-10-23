@@ -73,22 +73,37 @@ public final class Chart<D, C extends Config> {
         if (chart != null) {
             throw new IllegalStateException("Already initialized");
         }
-        Values.Set ds = dataSets[0];
-        Values[] arr = data.toArray(new Values[0]);
-        String[] names = new String[arr.length];
-        double[] values = new double[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            names[i] = arr[i].label;
-            values[i] = arr[i].values[0];
-        }
-        switch (type) {
-            case "Line":
-                this.chart = initLine(id, config.js, ds.label, names, values);
-                break;
-            case "Bar":
-                this.chart = initBar(id, config.js, ds.label, names, values);
-                break;
+        if (dataSets != null) {
+            Values.Set ds = dataSets[0];
+            Values[] arr = data.toArray(new Values[0]);
+            String[] names = new String[arr.length];
+            double[] values = new double[arr.length];
+            for (int i = 0; i < arr.length; i++) {
+                names[i] = arr[i].label;
+                values[i] = arr[i].values[0];
+            }
+            switch (type) {
+                case "Line":
+                    this.chart = initLine(id, config.js, ds.label, names, values);
+                    break;
+                case "Bar":
+                    this.chart = initBar(id, config.js, ds.label, names, values);
+                    break;
 
+            }
+        } else {
+            Segment[] arr = data.toArray(new Segment[0]);
+            double[] values = new double[arr.length];
+            String[] labels = new String[arr.length];
+            String[] colors = new String[arr.length];
+            String[] highlights = new String[arr.length];
+            for (int i = 0; i < arr.length; i++) {
+                values[i] = arr[i].value;
+                labels[i] = arr[i].label;
+                colors[i] = arr[i].color.color;
+                highlights[i] = arr[i].highlight.color;
+            }
+            this.chart = init360(type, id, config.js, labels, values, colors, highlights);
         }
 //        addListener(id, fnName, chart);
     }
@@ -178,15 +193,15 @@ public final class Chart<D, C extends Config> {
 */
 
     public static Chart<Segment, Config> createPie() {
-        return null;
+        return new Chart<>("Pie", new Config(), null);
     }
 
     public static Chart<Segment, Config> createDoughnut() {
-        return null;
+        return new Chart<>("Doughnut", new Config(), null);
     }
 
     public static Chart<Segment, Config> createPolar() {
-        return null;
+        return new Chart<>("PolarArea", new Config(), null);
     }
 
     // Chart.getData() -> List<Segment>
@@ -296,7 +311,7 @@ public final class Chart<D, C extends Config> {
     native static Object initLine(String id, Object config, String name, String[] names, double[] values);
 
 
-    @JavaScriptBody(args = { "type", "id", "name", "names", "values", "colors", "highlights" }, body =
+    @JavaScriptBody(args = { "type", "id", "config", "names", "values", "colors", "highlights" }, body =
         "var canvas = document.getElementById(id);\n" +
         "var ctx = canvas.getContext('2d');\n" +
         "var data = new Array();\n" +
@@ -308,12 +323,14 @@ public final class Chart<D, C extends Config> {
         "    'label' : names[i]\n" +
         "  });\n" +
         "};\n" +
-        "var graph = new Chart(ctx)[type](data, {\n" +
-        "  'responsive' : true\n" +
-        "});\n" +
+        "var graph = new Chart(ctx)[type](data, config);\n" +
         "return graph;\n"
     )
-    native static Object init360(String type, String id, String name, String[] names, Object[] values, String[] colors, String[] highlights);
+    native static Object init360(
+        String type, String id, Object config,
+        String[] names, double[] values,
+        String[] colors, String[] highlights
+    );
 
     @JavaScriptBody(args = { "js", "data", "title" }, body =
         "js.addData(data, title);"
