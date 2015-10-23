@@ -26,6 +26,7 @@ package net.java.html.charts;
  * #L%
  */
 
+import com.sun.glass.ui.Window;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
@@ -35,11 +36,14 @@ import javafx.application.Platform;
 import net.java.html.boot.BrowserBuilder;
 import org.netbeans.html.boot.spi.Fn;
 import static org.testng.Assert.assertNotNull;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class ChartsTest {
+public class ChartsTest implements Runnable {
+    private Chart<?,?> chart;
     private Fn.Presenter presenter;
+    private boolean animationComplete;
 
     @BeforeMethod
     public void initializePresenter() throws InterruptedException {
@@ -77,6 +81,7 @@ public class ChartsTest {
                     Color.rgba(151,187,205,0.2),
                     Color.rgba(151,187,205,1)
                 ));
+                lineChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
 
                 lineChart.getData().addAll(Arrays.asList(
                     new Values("January", 65, 28),
@@ -88,13 +93,15 @@ public class ChartsTest {
                     new Values("July", 40, 90)
                 ));
 
-                lineChart.applyTo("chartDiv");
+                lineChart.applyTo("lineChart");
+
+                chart = lineChart;
 
                 return null;
             }
         });
 
-//        System.in.read();
+        waitForAnimation();
     }
 
     @Test
@@ -111,6 +118,7 @@ public class ChartsTest {
                     Color.rgba(151,187,205,0.2),
                     Color.rgba(151,187,205,1)
                 ));
+                barChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
 
                 barChart.getData().addAll(Arrays.asList(
                     new Values("January", 65, 28),
@@ -122,13 +130,28 @@ public class ChartsTest {
                     new Values("July", 40, 90)
                 ));
 
-                barChart.applyTo("chartDiv");
+                barChart.applyTo("barChart");
 
+                chart = barChart;
                 return null;
             }
         });
 
-//        System.in.read();
+        waitForAnimation();
+    }
+
+    @AfterMethod
+    public void cleanUpTheGraph() throws Exception {
+        if (chart != null) {
+            run(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    chart.destroy();
+                    chart = null;
+                    return null;
+                }
+            });
+        }
     }
 
     private void run(final Callable<?> r) throws Exception {
@@ -149,6 +172,27 @@ public class ChartsTest {
         await.await();
         if (arr[0] != null) {
             throw arr[0];
+        }
+    }
+
+    @Override
+    public synchronized void run() {
+        animationComplete = true;
+        notifyAll();
+    }
+
+    private synchronized void waitForAnimation() throws Exception {
+        while (!animationComplete) {
+            wait(1000);
+            run(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    for (Window w : Window.getWindows()) {
+                        w.setSize(w.getWidth(), w.getHeight() - 1);
+                    }
+                    return null;
+                }
+            });
         }
     }
 }

@@ -36,10 +36,10 @@ import net.java.html.js.JavaScriptBody;
  * Global Chart Configuration</a>.
  */
 public class Config {
-    private final Object js;
+    final Object js;
 
     Config() {
-        js = initConfig();
+        js = initConfig("responsive", true);
     }
 
     /** Creates new generic configuration object.
@@ -58,16 +58,42 @@ public class Config {
      *      <code>double</code> or <code>boolean</code>)
      * @return <code>this</code>
      */
-    public Config set(String propertyName, Object value) {
+    public final Config set(String propertyName, Object value) {
         set(js, propertyName, value);
         return this;
     }
 
-    @JavaScriptBody(args = {  }, body = "return {};")
-    private static native Object initConfig();
+    /** Assigns a callback to the config object. The list of supported callback names
+     * is available at
+     * <a href="http://www.chartjs.org/docs/#getting-started-global-chart-configuration">
+     * Global Chart Configuration</a> - just search for the properties to which
+     * a <b>function</b> can be assigned.
+     *
+     * @param name the name of the property to assign
+     * @param run the function to callback when that property is triggered
+     * @return <code>this</code>
+     */
+    public final Config callback(String name, Runnable run) {
+        setFn(js, name, run);
+        return this;
+    }
+
+    @JavaScriptBody(args = { "initNameValuePairs" }, body =
+        "var obj = {};\n" +
+        "for (var i = 0; i < initNameValuePairs.length; i += 2) {\n" +
+        "  obj[initNameValuePairs[i]] = initNameValuePairs[i + 1];\n" +
+        "};\n" +
+        "return obj;\n"
+    )
+    private static native Object initConfig(Object... initNameValuePairs);
 
     @JavaScriptBody(args = { "config", "name", "value" }, wait4js = false, body =
         "config[name] = value;"
     )
     private static native void set(Object config, String name, Object value);
+
+    @JavaScriptBody(args = { "config", "name", "run" }, wait4js = false, javacall = true, body =
+        "config[name] = function() { run.@java.lang.Runnable::run()(); };"
+    )
+    private native void setFn(Object config, String name, Runnable run);
 }

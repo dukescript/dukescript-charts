@@ -83,10 +83,10 @@ public final class Chart<D, C extends Config> {
         }
         switch (type) {
             case "Line":
-                this.chart = initLine(id, ds.label, names, values);
+                this.chart = initLine(id, config.js, ds.label, names, values);
                 break;
             case "Bar":
-                this.chart = initBar(id, ds.label, names, values);
+                this.chart = initBar(id, config.js, ds.label, names, values);
                 break;
 
         }
@@ -222,7 +222,7 @@ public final class Chart<D, C extends Config> {
         }
     }
 
-    @JavaScriptBody(args = { "id", "name", "names", "values" }, body =
+    @JavaScriptBody(args = { "id", "config", "name", "names", "values" }, body =
         "var canvas = document.getElementById(id);\n" +
         "var ctx = canvas.getContext('2d');\n" +
         "var data = {\n" +
@@ -236,12 +236,10 @@ public final class Chart<D, C extends Config> {
         "    data: values\n" +
         "  }]\n" +
         "};\n" +
-        "var graph = new Chart(ctx).Bar(data, {\n" +
-        "  'responsive' : true\n" +
-        "});\n" +
+        "var graph = new Chart(ctx).Bar(data, config);\n" +
         "return graph;\n"
     )
-    native static Object initBar(String id, String name, String[] names, double[] values);
+    native static Object initBar(String id, Object config, String name, String[] names, double[] values);
 
 
     @JavaScriptBody(args = { "id", "fnName", "graph" }, wait4js = false, javacall = true, body =
@@ -272,13 +270,13 @@ public final class Chart<D, C extends Config> {
     }
 
     @JavaScriptBody(args = { "js" }, wait4js = false, body =
-        "js.canvas.removeEventListener('mousedown', js.listener);\n" +
+        "if (js.canvas) js.canvas.removeEventListener('mousedown', js.listener);\n" +
         "js.destroy();\n"
     )
     native static void destroy(Object js);
 
 
-    @JavaScriptBody(args = { "id", "name", "names", "values" }, body =
+    @JavaScriptBody(args = { "id", "config", "name", "names", "values" }, body =
         "var canvas = document.getElementById(id);\n" +
         "var ctx = canvas.getContext('2d');\n" +
         "var data = {\n" +
@@ -292,12 +290,10 @@ public final class Chart<D, C extends Config> {
         "    data: values\n" +
         "  }]\n" +
         "};\n" +
-        "var graph = new Chart(ctx).Line(data, {\n" +
-        "  'responsive' : true\n" +
-        "});\n" +
+        "var graph = new Chart(ctx).Line(data, config);\n" +
         "return graph;\n"
     )
-    native static Object initLine(String id, String name, String[] names, double[] values);
+    native static Object initLine(String id, Object config, String name, String[] names, double[] values);
 
 
     @JavaScriptBody(args = { "type", "id", "name", "names", "values", "colors", "highlights" }, body =
