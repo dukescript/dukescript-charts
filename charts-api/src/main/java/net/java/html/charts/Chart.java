@@ -75,17 +75,23 @@ public final class Chart<D, C extends Config> {
         }
         String clickLocationFn;
         if (dataSets != null) {
+            Values[] arr = data.toArray(new Values[0]);
+
+            String[] names = new String[arr.length];
             Object[] labels = new Object[dataSets.length];
+
             for (int i = 0; i < dataSets.length; i++) {
-                labels[i] = dataSets[i].raw;
+                final Object[] clone = dataSets[i].raw.clone();
+                final double[] valuesForDataSet = new double[arr.length];
+                for (int j = 0; j < arr.length; j++) {
+                    valuesForDataSet[j] = arr[j].values[i];
+                }
+                clone[5] = valuesForDataSet;
+                labels[i] = clone;
             }
 
-            Values[] arr = data.toArray(new Values[0]);
-            String[] names = new String[arr.length];
-            double[] values = new double[arr.length];
             for (int i = 0; i < arr.length; i++) {
                 names[i] = arr[i].label;
-                values[i] = arr[i].values[0];
             }
             switch (type) {
                 case "Line":
@@ -100,7 +106,7 @@ public final class Chart<D, C extends Config> {
                 default:
                     throw new IllegalStateException(type);
             }
-            this.chart = initLineLike(id, type, config.js, labels, names, values);
+            this.chart = initLineLike(id, type, config.js, labels, names);
         } else {
             Segment[] arr = data.toArray(new Segment[0]);
             double[] values = new double[arr.length];
@@ -282,24 +288,28 @@ public final class Chart<D, C extends Config> {
     native static void destroy(Object js);
 
 
-    @JavaScriptBody(args = { "id", "type", "config", "labels", "names", "values" }, body =
+    @JavaScriptBody(args = { "id", "type", "config", "labels", "names"}, body =
         "var canvas = document.getElementById(id);\n" +
         "var ctx = canvas.getContext('2d');\n" +
+        "var dataSets = [];\n" +
+        "for (var i = 0; i < labels.length; i++) {\n" +
+        "  dataSets.push({\n" +
+        "    label : labels[i][0],\n" +
+        "    fillColor: labels[i][1],\n" +
+        "    strokeColor: labels[i][2],\n" +
+        "    highlightFill: labels[i][3],\n" +
+        "    highlightStroke: labels[i][4],\n" +
+        "    data: labels[i][5]\n" +
+        "  });\n" +
+        "}\n" +
         "var data = {\n" +
         "  labels : names,\n" +
-        "  datasets : [{\n" +
-        "    label : labels[0][0],\n" +
-        "    fillColor: labels[0][1],\n" +
-        "    strokeColor: labels[0][2],\n" +
-        "    highlightFill: labels[0][3],\n" +
-        "    highlightStroke: labels[0][4],\n" +
-        "    data: values\n" +
-        "  }]\n" +
+        "  datasets : dataSets\n" +
         "};\n" +
         "var graph = new Chart(ctx)[type](data, config);\n" +
         "return graph;\n"
     )
-    native static Object initLineLike(String id, String type, Object config, Object[] labels, String[] names, double[] values);
+    native static Object initLineLike(String id, String type, Object config, Object[] labels, String[] names);
 
 
     @JavaScriptBody(args = { "type", "id", "config", "names", "values", "colors", "highlights" }, body =

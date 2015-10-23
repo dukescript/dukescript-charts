@@ -43,7 +43,7 @@ public final class Values {
 
         public Set(String label, Color fillColor, Color strokeColor) {
             raw = new Object[] {
-                label, fillColor.color, strokeColor.color, null, null
+                label, fillColor.color, strokeColor.color, null, null, null
             };
         }
     }

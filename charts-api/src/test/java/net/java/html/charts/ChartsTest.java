@@ -291,7 +291,10 @@ public class ChartsTest implements Runnable {
         notifyAll();
     }
 
-    private synchronized void waitForAnimation() throws Exception {
+    private void waitForAnimation() throws Exception {
+        waitForAnimationImpl();
+    }
+    private synchronized void waitForAnimationImpl() throws Exception {
         while (!animationComplete) {
             wait(1000);
             run(new Callable<Void>() {
