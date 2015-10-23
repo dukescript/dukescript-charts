@@ -32,27 +32,28 @@ import java.util.EventObject;
  * {@link ChartListener} methods.
  */
 public final class ChartEvent extends EventObject{
+    private final Object[] info;
 
-    private final String label;
-    private final double value;
-
-    ChartEvent(Chart source, String label, double value) {
+    ChartEvent(Chart source, Object[] info) {
         super(source);
-        this.label = label;
-        this.value = value;
+        this.info = info;
     }
 
     /** Name of the object where the action happened.
      * @return name
      */
     public String getLabel() {
-        return label;
+        return (String) info[0];
     }
 
-    /** Value of the object when the action happened.
-     * @return the value
+    /** Values of the objects at a place where the action happened.
+     * @return the array of values
      */
-    public double getValue() {
-        return value;
+    public double[] getValues() {
+        double[] arr = new double[info.length / 2];
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = ((Number) info[i * 2 + 1]).doubleValue();
+        }
+        return arr;
     }
 }

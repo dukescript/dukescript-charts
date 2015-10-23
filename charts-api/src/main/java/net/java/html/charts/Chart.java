@@ -247,13 +247,6 @@ public final class Chart<D, C extends Config> {
     // Implementations
     //
 
-
-    final void fireEvent(ChartEvent ev) {
-        for (ChartListener l : Listeners.all(this.listener)) {
-            l.chartClick(ev);
-        }
-    }
-
     @JavaScriptBody(args = { "id", "fnName", "graph" }, wait4js = false, javacall = true, body =
 "var self = this;\n" +
 "var canvas = document.getElementById(id);\n" +
@@ -265,19 +258,22 @@ public final class Chart<D, C extends Config> {
 "  x -= canvas.offsetLeft;\n" +
 "  y -= canvas.offsetTop;\n" +
 "  var arr = graph[fnName](event);\n" +
-"  self.@net.java.html.charts.Chart::onClick([Ljava/lang/Object;)([\n" +
-"    arr[0].label, arr[0].value\n" +
-"  ]);\n" +
+"  var info = [];\n" +
+"  for (var i = 0; i < arr.length; i++) {\n" +
+"    info.push(arr[i].label);\n" +
+"    info.push(arr[i].value);\n" +
+"  }\n" +
+"  self.@net.java.html.charts.Chart::onClick([Ljava/lang/Object;)(info);\n" +
 "}\n"  +
 "graph.canvas = canvas;\n"  +
 "graph.listener = handleClick;\n"
     )
     private native void addListener(String id, String fnName, Object graph);
 
-    void onClick(Object[] info) {
-        ChartListener l = this.listener;
-        if (l != null) {
-            l.chartClick(new ChartEvent(this, (String)info[0], (((Number)info[1])).doubleValue()));
+    final void onClick(Object[] info) {
+        ChartEvent ev = new ChartEvent(this, info);
+        for (ChartListener l : Listeners.all(this.listener)) {
+            l.chartClick(ev);
         }
     }
 
