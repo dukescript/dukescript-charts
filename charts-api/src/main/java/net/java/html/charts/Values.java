@@ -39,14 +39,12 @@ public final class Values {
     /** Set of {@link Values values} for line and radar charts.
      */
     public static final class Set {
-        final String label;
-        final Color fillColor;
-        final Color strokeColor;
+        final Object[] raw;
 
         public Set(String label, Color fillColor, Color strokeColor) {
-            this.label = label;
-            this.fillColor = fillColor;
-            this.strokeColor = strokeColor;
+            raw = new Object[] {
+                label, fillColor.color, strokeColor.color, null, null
+            };
         }
     }
 }

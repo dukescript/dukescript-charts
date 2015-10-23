@@ -75,7 +75,11 @@ public final class Chart<D, C extends Config> {
         }
         String clickLocationFn;
         if (dataSets != null) {
-            Values.Set ds = dataSets[0];
+            Object[] labels = new Object[dataSets.length];
+            for (int i = 0; i < dataSets.length; i++) {
+                labels[i] = dataSets[i].raw;
+            }
+
             Values[] arr = data.toArray(new Values[0]);
             String[] names = new String[arr.length];
             double[] values = new double[arr.length];
@@ -96,7 +100,7 @@ public final class Chart<D, C extends Config> {
                 default:
                     throw new IllegalStateException(type);
             }
-            this.chart = initLineLike(id, type, config.js, ds.label, names, values);
+            this.chart = initLineLike(id, type, config.js, labels, names, values);
         } else {
             Segment[] arr = data.toArray(new Segment[0]);
             double[] values = new double[arr.length];
@@ -278,24 +282,24 @@ public final class Chart<D, C extends Config> {
     native static void destroy(Object js);
 
 
-    @JavaScriptBody(args = { "id", "type", "config", "name", "names", "values" }, body =
+    @JavaScriptBody(args = { "id", "type", "config", "labels", "names", "values" }, body =
         "var canvas = document.getElementById(id);\n" +
         "var ctx = canvas.getContext('2d');\n" +
         "var data = {\n" +
         "  labels : names,\n" +
         "  datasets : [{\n" +
-        "    label : name,\n" +
-        "    fillColor: 'rgba(151,187,205,0.5)',\n" +
-        "    strokeColor: 'rgba(151,187,205,0.8)',\n" +
-        "    highlightFill: 'rgba(151,187,205,0.75)',\n" +
-        "    highlightStroke: 'rgba(151,187,205,1)',\n" +
+        "    label : labels[0][0],\n" +
+        "    fillColor: labels[0][1],\n" +
+        "    strokeColor: labels[0][2],\n" +
+        "    highlightFill: labels[0][3],\n" +
+        "    highlightStroke: labels[0][4],\n" +
         "    data: values\n" +
         "  }]\n" +
         "};\n" +
         "var graph = new Chart(ctx)[type](data, config);\n" +
         "return graph;\n"
     )
-    native static Object initLineLike(String id, String type, Object config, String name, String[] names, double[] values);
+    native static Object initLineLike(String id, String type, Object config, Object[] labels, String[] names, double[] values);
 
 
     @JavaScriptBody(args = { "type", "id", "config", "names", "values", "colors", "highlights" }, body =
