@@ -52,10 +52,12 @@ public final class Chart<D, C extends Config> {
     private final C config;
     private final Values.Set[] dataSets;
     private final List<D> data;
+    private final String type;
     private Object chart;
     private ChartListener listener;
 
-    private Chart(C config, Values.Set[] dataSets) {
+    private Chart(String type, C config, Values.Set[] dataSets) {
+        this.type = type;
         this.config = config;
         this.data = new ArrayList<>();
         this.dataSets = dataSets;
@@ -79,7 +81,15 @@ public final class Chart<D, C extends Config> {
             names[i] = arr[i].label;
             values[i] = arr[i].values[0];
         }
-        this.chart = initLine(id, ds.label, names, values);
+        switch (type) {
+            case "Line":
+                this.chart = initLine(id, ds.label, names, values);
+                break;
+            case "Bar":
+                this.chart = initBar(id, ds.label, names, values);
+                break;
+
+        }
 //        addListener(id, fnName, chart);
     }
 
@@ -130,7 +140,7 @@ public final class Chart<D, C extends Config> {
     // Chart.getData() -> List<Values>
 
     public static Chart<Values, Config> createLine(Values.Set... dataSets) {
-        return new Chart<>(new Config(), dataSets);
+        return new Chart<>("Line", new Config(), dataSets);
     }
     public static Chart<Values, Config> createRadar(Values.Set... dataSets) {
         return null;
@@ -153,7 +163,7 @@ public final class Chart<D, C extends Config> {
 */
 
     public static Chart<Values,Config> createBar(Values.Set... dataSets) {
-        return null;
+        return new Chart<>("Bar", new Config(), dataSets);
     }
 /*
     // bar:
@@ -231,7 +241,7 @@ public final class Chart<D, C extends Config> {
         "});\n" +
         "return graph;\n"
     )
-    native static Object initBar(String id, String name, String[] names, Object[] values);
+    native static Object initBar(String id, String name, String[] names, double[] values);
 
 
     @JavaScriptBody(args = { "id", "fnName", "graph" }, wait4js = false, javacall = true, body =
