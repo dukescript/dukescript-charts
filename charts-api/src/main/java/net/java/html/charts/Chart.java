@@ -73,6 +73,7 @@ public final class Chart<D, C extends Config> {
         if (chart != null) {
             throw new IllegalStateException("Already initialized");
         }
+        String clickLocationFn;
         if (dataSets != null) {
             Values.Set ds = dataSets[0];
             Values[] arr = data.toArray(new Values[0]);
@@ -85,11 +86,14 @@ public final class Chart<D, C extends Config> {
             switch (type) {
                 case "Line":
                     this.chart = initLine(id, config.js, ds.label, names, values);
+                    clickLocationFn = "getPointsAtEvent";
                     break;
                 case "Bar":
                     this.chart = initBar(id, config.js, ds.label, names, values);
+                    clickLocationFn = "getBarsAtEvent";
                     break;
-
+                default:
+                    throw new IllegalStateException(type);
             }
         } else {
             Segment[] arr = data.toArray(new Segment[0]);
@@ -104,8 +108,9 @@ public final class Chart<D, C extends Config> {
                 highlights[i] = arr[i].highlight.color;
             }
             this.chart = init360(type, id, config.js, labels, values, colors, highlights);
+            clickLocationFn = "getSegmentsAtEvent";
         }
-//        addListener(id, fnName, chart);
+        addListener(id, clickLocationFn, chart);
     }
 
     /** Adds a listener to the chart.
@@ -260,8 +265,8 @@ public final class Chart<D, C extends Config> {
     @JavaScriptBody(args = { "id", "fnName", "graph" }, wait4js = false, javacall = true, body =
 "var self = this;\n" +
 "var canvas = document.getElementById(id);\n" +
-"canvas.addEventListener('mousedown', getPosition, false);\n" +
-"function getPosition(event)\n" +
+"canvas.addEventListener('mousedown', handleClick, false);\n" +
+"function handleClick(event)\n" +
 "{\n" +
 "  var x = event.x;\n" +
 "  var y = event.y;\n" +
@@ -273,7 +278,7 @@ public final class Chart<D, C extends Config> {
 "  ]);\n" +
 "}\n"  +
 "graph.canvas = canvas;\n"  +
-"graph.listener = getPosition;\n"
+"graph.listener = handleClick;\n"
     )
     private native void addListener(String id, String fnName, Object graph);
 
