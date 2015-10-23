@@ -85,16 +85,18 @@ public final class Chart<D, C extends Config> {
             }
             switch (type) {
                 case "Line":
-                    this.chart = initLine(id, config.js, ds.label, names, values);
                     clickLocationFn = "getPointsAtEvent";
                     break;
                 case "Bar":
-                    this.chart = initBar(id, config.js, ds.label, names, values);
                     clickLocationFn = "getBarsAtEvent";
+                    break;
+                case "Radar":
+                    clickLocationFn = "getPointsAtEvent";
                     break;
                 default:
                     throw new IllegalStateException(type);
             }
+            this.chart = initLineLike(id, type, config.js, ds.label, names, values);
         } else {
             Segment[] arr = data.toArray(new Segment[0]);
             double[] values = new double[arr.length];
@@ -163,7 +165,7 @@ public final class Chart<D, C extends Config> {
         return new Chart<>("Line", new Config(), dataSets);
     }
     public static Chart<Values, Config> createRadar(Values.Set... dataSets) {
-        return null;
+        return new Chart<>("Radar", new Config(), dataSets);
     }
 
     /*
@@ -242,26 +244,6 @@ public final class Chart<D, C extends Config> {
         }
     }
 
-    @JavaScriptBody(args = { "id", "config", "name", "names", "values" }, body =
-        "var canvas = document.getElementById(id);\n" +
-        "var ctx = canvas.getContext('2d');\n" +
-        "var data = {\n" +
-        "  labels : names,\n" +
-        "  datasets : [{\n" +
-        "    label : name,\n" +
-        "    fillColor: 'rgba(151,187,205,0.5)',\n" +
-        "    strokeColor: 'rgba(151,187,205,0.8)',\n" +
-        "    highlightFill: 'rgba(151,187,205,0.75)',\n" +
-        "    highlightStroke: 'rgba(151,187,205,1)',\n" +
-        "    data: values\n" +
-        "  }]\n" +
-        "};\n" +
-        "var graph = new Chart(ctx).Bar(data, config);\n" +
-        "return graph;\n"
-    )
-    native static Object initBar(String id, Object config, String name, String[] names, double[] values);
-
-
     @JavaScriptBody(args = { "id", "fnName", "graph" }, wait4js = false, javacall = true, body =
 "var self = this;\n" +
 "var canvas = document.getElementById(id);\n" +
@@ -296,7 +278,7 @@ public final class Chart<D, C extends Config> {
     native static void destroy(Object js);
 
 
-    @JavaScriptBody(args = { "id", "config", "name", "names", "values" }, body =
+    @JavaScriptBody(args = { "id", "type", "config", "name", "names", "values" }, body =
         "var canvas = document.getElementById(id);\n" +
         "var ctx = canvas.getContext('2d');\n" +
         "var data = {\n" +
@@ -310,10 +292,10 @@ public final class Chart<D, C extends Config> {
         "    data: values\n" +
         "  }]\n" +
         "};\n" +
-        "var graph = new Chart(ctx).Line(data, config);\n" +
+        "var graph = new Chart(ctx)[type](data, config);\n" +
         "return graph;\n"
     )
-    native static Object initLine(String id, Object config, String name, String[] names, double[] values);
+    native static Object initLineLike(String id, String type, Object config, String name, String[] names, double[] values);
 
 
     @JavaScriptBody(args = { "type", "id", "config", "names", "values", "colors", "highlights" }, body =

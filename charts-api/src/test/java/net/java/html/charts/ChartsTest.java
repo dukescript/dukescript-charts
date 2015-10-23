@@ -142,6 +142,42 @@ public class ChartsTest implements Runnable {
     }
 
     @Test
+    public void radarChart() throws Exception {
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                Chart<Values, Config> radarChart = Chart.createRadar(new Values.Set(
+                    "My First dataset",
+                    Color.rgba(220,220,220,0.2),
+                    Color.rgba(220,220,220,1.0)
+                ), new Values.Set(
+                    "My Second dataset",
+                    Color.rgba(151,187,205,0.2),
+                    Color.rgba(151,187,205,1)
+                ));
+                radarChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
+
+                radarChart.getData().addAll(Arrays.asList(
+                    new Values("January", 65, 28),
+                    new Values("February", 59, 48),
+                    new Values("March", 80, 40),
+                    new Values("April", 81, 19),
+                    new Values("May", 56, 86),
+                    new Values("June", 55, 27),
+                    new Values("July", 40, 90)
+                ));
+
+                radarChart.applyTo("barChart");
+
+                chart = radarChart;
+                return null;
+            }
+        });
+
+        waitForAnimation();
+    }
+
+    @Test
     public void pieChart() throws Exception {
         run(new Callable<Void>() {
             @Override
