@@ -26,10 +26,10 @@ package net.java.html.charts;
  * #L%
  */
 
-/** Segment in a pie or doughnut graph. Carries value with additional
- * visualization attributes. Use for charts created by
- * {@link Chart#createDoughnut()} and
- * {@link Chart#createPie()} factory methods.
+/** Segment in a {@link Chart#createPie() pie}, {@link Chart#createPolar() polar} or
+ * {@link Chart#createDoughnut() doughnut} chart.
+ * Carries value with additional
+ * visualization attributes. 
  */
 public final class Segment {
     final String label;
@@ -37,6 +37,14 @@ public final class Segment {
     final Color color;
     final Color highlight;
 
+    /** Name, value and colors to use to represent the segment
+     * in a {@link Chart#createPie() pie}, {@link Chart#createPolar() polar} or
+     * {@link Chart#createDoughnut() doughnut} chart.
+     * @param label name of the segment
+     * @param value value of the segment
+     * @param color color to use when drawing the segment
+     * @param highlight color when the segment is highlighted
+     */
     public Segment(String label, double value, Color color, Color highlight) {
         this.label = label;
         this.value = value;

@@ -152,7 +152,7 @@ public final class Chart<D, C extends Config> {
     /** The data displayed by this graph. One can change the data,
      * remove some elements, add new ones. The chart will be updated according
      * to such change.
-     * @return
+     * @return modifiable list of data the chart displays
      */
     public List<D> getData() {
         return data;
@@ -169,11 +169,22 @@ public final class Chart<D, C extends Config> {
     // Factories
     //
 
-    // Chart.getData() -> List<Values>
-
+    /** Creates new line based chart.
+     * 
+     * @param dataSets individual sets of values to display
+     * @return chart object to be {@link #getData() filled with data} and
+     *   {@link #applyTo(java.lang.String) displayed}.
+     */
     public static Chart<Values, Config> createLine(Values.Set... dataSets) {
         return new Chart<>("Line", new Config(), dataSets);
     }
+    
+    /** Creates new radar chart.
+     * 
+     * @param dataSets individual sets of values to display
+     * @return chart object to be {@link #getData() filled with data} and
+     *   {@link #applyTo(java.lang.String) displayed}.
+     */
     public static Chart<Values, Config> createRadar(Values.Set... dataSets) {
         return new Chart<>("Radar", new Config(), dataSets);
     }
@@ -194,6 +205,12 @@ public final class Chart<D, C extends Config> {
         }
 */
 
+    /** Creates new bar chart.
+     * 
+     * @param dataSets individual sets of values to display
+     * @return chart object to be {@link #getData() filled with data} and
+     *   {@link #applyTo(java.lang.String) displayed}.
+     */
     public static Chart<Values,Config> createBar(Values.Set... dataSets) {
         return new Chart<>("Bar", new Config(), dataSets);
     }
@@ -209,19 +226,32 @@ public final class Chart<D, C extends Config> {
         }
 */
 
+    /** Creates new pie chart.
+     * 
+     * @return chart object to be {@link #getData() filled with data} and
+     *   {@link #applyTo(java.lang.String) displayed}.
+     */
     public static Chart<Segment, Config> createPie() {
         return new Chart<>("Pie", new Config(), null);
     }
 
+    /** Creates new doughnut (e.g. {@link #createPie() pie} with missing center) chart.
+     * 
+     * @return chart object to be {@link #getData() filled with data} and
+     *   {@link #applyTo(java.lang.String) displayed}.
+     */
     public static Chart<Segment, Config> createDoughnut() {
         return new Chart<>("Doughnut", new Config(), null);
     }
 
+    /** Creates new radar (e.g. scaled {@link #createPie() pie}) chart.
+     * 
+     * @return chart object to be {@link #getData() filled with data} and
+     *   {@link #applyTo(java.lang.String) displayed}.
+     */
     public static Chart<Segment, Config> createPolar() {
         return new Chart<>("PolarArea", new Config(), null);
     }
-
-    // Chart.getData() -> List<Segment>
 
     /*
     // polar:

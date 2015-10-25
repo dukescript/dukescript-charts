@@ -35,6 +35,14 @@ public final class Color {
         this.color = color;
     }
 
+    /** Create color from its individual components.
+     * 
+     * @param red 0-255 value for red
+     * @param green 0-255 value for green
+     * @param blue 0-255 value for blue
+     * @param alpha transparency from 0.0 to 1.0
+     * @return object representing the color
+     */
     public static Color rgba(int red, int green, int blue, double alpha) {
         rgbRange(red);
         rgbRange(green);
@@ -43,6 +51,11 @@ public final class Color {
         return new Color("rgba(" + red +"," + green + "," + blue + "," + alpha + ")");
     }
 
+    /** Specify color as a string.
+     * 
+     * @param color string representing the color as used in HTML5 specification
+     * @return color object
+     */
     public static Color valueOf(String color) {
         return new Color(color);
     }

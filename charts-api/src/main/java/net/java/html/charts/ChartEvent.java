@@ -28,7 +28,7 @@ package net.java.html.charts;
 
 import java.util.EventObject;
 
-/** Event describing what happened in {@link Chart}. Delivered to
+/** Event describing what happened in a {@link Chart}. Delivered to
  * {@link ChartListener} methods.
  */
 public final class ChartEvent extends EventObject{

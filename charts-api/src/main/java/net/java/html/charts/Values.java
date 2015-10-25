@@ -26,21 +26,40 @@ package net.java.html.charts;
  * #L%
  */
 
-/** Values graph.
+/** Values in a {@link Chart#createLine(net.java.html.charts.Values.Set...) line},
+ * {@link Chart#createRadar(net.java.html.charts.Values.Set...) radar} or
+ * {@link Chart#createBar(net.java.html.charts.Values.Set...) bar} chart.
  */
 public final class Values {
     final String label;
     final double[] values;
+    
+    /** One column of values. Comes with a label and an array of values, each
+     * for one {@link Set} in the {@link Chart#createLine(net.java.html.charts.Values.Set...) line},
+     * {@link Chart#createRadar(net.java.html.charts.Values.Set...) radar} or
+     * {@link Chart#createBar(net.java.html.charts.Values.Set...) bar} chart.
+     * @param label name of the column of values
+     * @param values value for each {@link Set}
+     */
     public Values(String label, double... values) {
         this.label = label;
         this.values = values;
     }
 
-    /** Set of {@link Values values} for line and radar charts.
+    /** Set of {@link Values values} for 
+     * {@link Chart#createLine(net.java.html.charts.Values.Set...) line},
+     * {@link Chart#createRadar(net.java.html.charts.Values.Set...) radar} or
+     * {@link Chart#createBar(net.java.html.charts.Values.Set...) bar} chart.
      */
     public static final class Set {
         final Object[] raw;
 
+        /** Label for the set of values and colors to use to draw it.
+         * 
+         * @param label name for the set of values
+         * @param fillColor color to use to fill the values in the chart
+         * @param strokeColor stroke color
+         */
         public Set(String label, Color fillColor, Color strokeColor) {
             raw = new Object[] {
                 label, fillColor.color, strokeColor.color, null, null, null
