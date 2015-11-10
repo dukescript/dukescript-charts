@@ -62,6 +62,16 @@
                             <goal>process-js-annotations</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>test-classes</id>
+                        <phase>process-test-classes</phase>
+                        <goals>
+                            <goal>process-js-annotations</goal>
+                        </goals>
+                        <configuration>
+                            <classes>${project.build.directory}/test-classes</classes>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

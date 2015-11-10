@@ -27,6 +27,7 @@ package net.java.html.charts;
  */
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import net.java.html.js.JavaScriptBody;
 import net.java.html.js.JavaScriptResource;
@@ -56,10 +57,10 @@ public final class Chart<D, C extends Config> {
     private Object chart;
     private ChartListener listener;
 
-    private Chart(String type, C config, Values.Set[] dataSets) {
+    private Chart(String type, Class<D> elementType, C config, Values.Set[] dataSets) {
         this.type = type;
         this.config = config;
-        this.data = new ArrayList<>();
+        this.data = new ChartList<>(elementType);
         this.dataSets = dataSets;
     }
 
@@ -125,6 +126,19 @@ public final class Chart<D, C extends Config> {
         addListener(id, clickLocationFn, chart);
     }
 
+    // for testing purposes
+    final Object eval(String t) {
+        return eval(t, chart);
+    }
+
+    final boolean isRealized() {
+        return chart != null;
+    }
+
+    final void removeData() {
+        removeData(chart);
+    }
+
     /** Adds a listener to the chart.
      * @param l the listener
      */
@@ -163,6 +177,7 @@ public final class Chart<D, C extends Config> {
      */
     public void destroy() {
         destroy(chart);
+        chart = null;
     }
 
     //
@@ -176,7 +191,7 @@ public final class Chart<D, C extends Config> {
      *   {@link #applyTo(java.lang.String) displayed}.
      */
     public static Chart<Values, Config> createLine(Values.Set... dataSets) {
-        return new Chart<>("Line", new Config(), dataSets);
+        return new Chart<>("Line", Values.class, new Config(), dataSets);
     }
     
     /** Creates new radar chart.
@@ -186,7 +201,7 @@ public final class Chart<D, C extends Config> {
      *   {@link #applyTo(java.lang.String) displayed}.
      */
     public static Chart<Values, Config> createRadar(Values.Set... dataSets) {
-        return new Chart<>("Radar", new Config(), dataSets);
+        return new Chart<>("Radar", Values.class, new Config(), dataSets);
     }
 
     /*
@@ -212,7 +227,7 @@ public final class Chart<D, C extends Config> {
      *   {@link #applyTo(java.lang.String) displayed}.
      */
     public static Chart<Values,Config> createBar(Values.Set... dataSets) {
-        return new Chart<>("Bar", new Config(), dataSets);
+        return new Chart<>("Bar", Values.class, new Config(), dataSets);
     }
 /*
     // bar:
@@ -232,7 +247,7 @@ public final class Chart<D, C extends Config> {
      *   {@link #applyTo(java.lang.String) displayed}.
      */
     public static Chart<Segment, Config> createPie() {
-        return new Chart<>("Pie", new Config(), null);
+        return new Chart<>("Pie", Segment.class, new Config(), null);
     }
 
     /** Creates new doughnut (e.g. {@link #createPie() pie} with missing center) chart.
@@ -241,7 +256,7 @@ public final class Chart<D, C extends Config> {
      *   {@link #applyTo(java.lang.String) displayed}.
      */
     public static Chart<Segment, Config> createDoughnut() {
-        return new Chart<>("Doughnut", new Config(), null);
+        return new Chart<>("Doughnut", Segment.class, new Config(), null);
     }
 
     /** Creates new radar (e.g. scaled {@link #createPie() pie}) chart.
@@ -250,7 +265,7 @@ public final class Chart<D, C extends Config> {
      *   {@link #applyTo(java.lang.String) displayed}.
      */
     public static Chart<Segment, Config> createPolar() {
-        return new Chart<>("PolarArea", new Config(), null);
+        return new Chart<>("PolarArea", Segment.class, new Config(), null);
     }
 
     /*
@@ -307,11 +322,19 @@ public final class Chart<D, C extends Config> {
         }
     }
 
+    @JavaScriptBody(args = {"chart"}, body = "chart.removeData();")
+    native static void removeData(Object chart);
+
     @JavaScriptBody(args = { "js" }, wait4js = false, body =
         "if (js.canvas) js.canvas.removeEventListener('mousedown', js.listener);\n" +
         "js.destroy();\n"
     )
     native static void destroy(Object js);
+
+    @JavaScriptBody(args = {"t", "chart" }, body =
+        "with (chart) { return eval(t) }"
+    )
+    native static Object eval(String t, Object chart);
 
 
     @JavaScriptBody(args = { "id", "type", "config", "labels", "names"}, body =
@@ -393,4 +416,73 @@ public final class Chart<D, C extends Config> {
         return new Chart(id, "getSegmentsAtEvent", init360(type, id, "Test", names, valArr, colors, colors));
     }
     */
+
+    private final class ChartList<T> extends ArrayList<T> {
+        private final Class<T> elementType;
+
+        public ChartList(Class<T> elementType) {
+            this.elementType = elementType;
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            if (isRealized()) {
+                throw new UnsupportedOperationException();
+            }
+            return super.retainAll(c);
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            if (isRealized()) {
+                throw new UnsupportedOperationException();
+            }
+            return super.removeAll(c);
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends T> c) {
+            if (isRealized()) {
+                throw new UnsupportedOperationException();
+            }
+            return super.addAll(index, c);
+        }
+
+        @Override
+        public void clear() {
+            if (isRealized()) {
+                throw new UnsupportedOperationException();
+            }
+            super.clear();
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            if (isRealized()) {
+                throw new UnsupportedOperationException();
+            }
+            return super.remove(o);
+        }
+
+        @Override
+        public void add(int index, T element) {
+            if (isRealized()) {
+                throw new UnsupportedOperationException();
+            }
+            super.add(index, element);
+        }
+
+        @Override
+        public T remove(int index) {
+            if (isRealized()) {
+                if (index == 0) {
+                    T r = super.remove(0);
+                    removeData();
+                    return r;
+                }
+                throw new UnsupportedOperationException();
+            }
+            return super.remove(index);
+        }
+    }
 }

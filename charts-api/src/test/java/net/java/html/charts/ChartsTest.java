@@ -35,7 +35,9 @@ import java.util.concurrent.Executors;
 import javafx.application.Platform;
 import net.java.html.boot.BrowserBuilder;
 import org.netbeans.html.boot.spi.Fn;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.fail;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -103,6 +105,39 @@ public class ChartsTest implements Runnable {
         });
 
         waitForAnimation();
+
+        class CheckRenderAndRemove1st implements Callable<Void> {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
+                assertEquals(chart.eval("datasets[0].label"), "My First dataset");
+                assertInt(chart.eval("datasets[0].points.length"), 7, "Seven values set 0");
+                assertInt(chart.eval("datasets[1].points.length"), 7, "Seven values set 1");
+                assertInt(chart.eval("datasets[1].points[0].value"), 28, "1st value in 2nd set");
+                assertEquals(chart.eval("datasets[1].points[0].label"), "January", "1st label");
+                assertEquals(chart.eval("datasets[1].points[0].datasetLabel"), "My Second dataset", "2nd data set label");
+
+                chart.getData().remove(0);
+                return null;
+            }
+        }
+
+        CheckRenderAndRemove1st cr = new CheckRenderAndRemove1st();
+        run(cr);
+
+        waitForAnimation();
+
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
+                assertInt(chart.eval("datasets[0].points.length"), 6, "Just six values set 0");
+                assertInt(chart.eval("datasets[1].points.length"), 6, "Just six values set 1");
+                assertInt(chart.eval("datasets[0].points[0].value"), 59, "1st value in 1nd set");
+                assertInt(chart.eval("datasets[1].points[0].value"), 48, "1st value in 2nd set");
+                return null;
+            }
+        });
     }
 
     @Test
@@ -266,13 +301,13 @@ public class ChartsTest implements Runnable {
 
     private void run(final Callable<?> r) throws Exception {
         final CountDownLatch await = new CountDownLatch(1);
-        final Exception[] arr = { null };
+        final Throwable[] arr = { null };
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 try (Closeable c = Fn.activate(presenter)) {
                     r.call();
-                } catch (Exception t) {
+                } catch (Throwable t) {
                     arr[0] = t;
                 } finally {
                     await.countDown();
@@ -280,8 +315,11 @@ public class ChartsTest implements Runnable {
             }
         });
         await.await();
-        if (arr[0] != null) {
-            throw arr[0];
+        if (arr[0] instanceof Exception) {
+            throw (Exception)arr[0];
+        }
+        if (arr[0] instanceof Error) {
+            throw (Error)arr[0];
         }
     }
 
@@ -306,6 +344,14 @@ public class ChartsTest implements Runnable {
                     return null;
                 }
             });
+        }
+    }
+
+    static void assertInt(Object real, int exp, String msg) {
+        if (real instanceof Number) {
+            assertEquals(((Number)real).intValue(), exp, msg);
+        } else {
+            fail("Expecting number: " + real);
         }
     }
 }
