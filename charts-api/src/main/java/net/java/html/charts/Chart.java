@@ -327,6 +327,11 @@ public final class Chart<D, C extends Config> {
     )
     native static void addData(Object chart, int index, double value, String color, String highlight, String label);
 
+    @JavaScriptBody(args = { "chart", "data", "label" }, wait4js = false, body =
+        "chart.addData(data, label);"
+    )
+    native static void addData(Object chart, double[] data, String label);
+
     @JavaScriptBody(args = {"chart", "i"}, wait4js = false, body = "chart.removeData(i);")
     native static void removeData(Object chart, int i);
 
@@ -482,6 +487,26 @@ public final class Chart<D, C extends Config> {
             }
             super.add(index, element);
         }
+
+        @Override
+        public boolean add(T e) {
+            if (isRealized()) {
+                if (elementType == Values.class) {
+                    Values v = (Values) e;
+                    if (super.add(e)) {
+                        addData(chart, v.values, v.label);
+                        return true;
+                    }
+                    return false;
+                } else {
+                    add(size(), e);
+                    return true;
+                }
+            }
+            return super.add(e);
+        }
+
+
 
         @Override
         public T remove(int index) {

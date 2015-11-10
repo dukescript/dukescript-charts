@@ -180,6 +180,7 @@ public class ChartsTest implements Runnable {
 
     @Test
     public void radarChart() throws Exception {
+        final List<Chart<Values, Config>> radars = new ArrayList<>();
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -193,6 +194,7 @@ public class ChartsTest implements Runnable {
                     Color.rgba(151,187,205,1)
                 ));
                 radarChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
+                radars.add(radarChart);
 
                 radarChart.getData().addAll(Arrays.asList(
                     new Values("January", 65, 28),
@@ -210,8 +212,32 @@ public class ChartsTest implements Runnable {
                 return null;
             }
         });
-
         waitForAnimation();
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
+                assertInt(chart.eval("datasets[0].points.length"), 7, "Seven values set 0");
+                assertInt(chart.eval("datasets[1].points.length"), 7, "Seven values set 1");
+                assertInt(chart.eval("datasets[0].points[6].value"), 40, "6th value in 1nd set");
+                assertInt(chart.eval("datasets[1].points[6].value"), 90, "6th value in 2nd set");
+
+                radars.get(0).getData().add(new Values("Dec", 12, 144));
+                return null;
+            }
+        });
+        waitForAnimation();
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
+                assertInt(chart.eval("datasets[0].points.length"), 8, "Eight values set 0");
+                assertInt(chart.eval("datasets[1].points.length"), 8, "Eight values set 1");
+                assertInt(chart.eval("datasets[0].points[7].value"), 12, "8th value in 1nd set");
+                assertInt(chart.eval("datasets[1].points[7].value"), 144, "8th value in 2nd set");
+                return null;
+            }
+        });
     }
 
     @Test
