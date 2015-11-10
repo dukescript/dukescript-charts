@@ -28,7 +28,9 @@ package net.java.html.charts;
 
 import com.sun.glass.ui.Window;
 import java.io.Closeable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
@@ -238,10 +240,12 @@ public class ChartsTest implements Runnable {
 
     @Test
     public void doughtnutChart() throws Exception {
+        final List<Chart<Segment, Config>> pies = new ArrayList<>();
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 Chart<Segment, Config> pieChart = Chart.createDoughnut();
+                pies.add(pieChart);
                 pieChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
 
                 pieChart.getData().addAll(Arrays.asList(
@@ -256,8 +260,30 @@ public class ChartsTest implements Runnable {
                 return null;
             }
         });
-
         waitForAnimation();
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("segments.length"), 3, "Three segments");
+                assertEquals(chart.eval("segments[2].label"), "blue");
+                assertInt(chart.eval("segments[2].value"), 42, "Three hundred red");
+
+                pies.get(0).getData().add(2, new Segment("black", 100, Color.rgba(0, 0, 0, 0), Color.valueOf("black")));
+                return null;
+            }
+        });
+        waitForAnimation();
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("segments.length"), 4, "Four segments");
+                assertEquals(chart.eval("segments[2].label"), "black");
+                assertInt(chart.eval("segments[2].value"), 100, "Three hundred red");
+                assertEquals(chart.eval("segments[3].label"), "blue");
+                assertInt(chart.eval("segments[3].value"), 42, "Three hundred red");
+                return null;
+            }
+        });
     }
 
     @Test

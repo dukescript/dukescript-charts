@@ -322,7 +322,12 @@ public final class Chart<D, C extends Config> {
         }
     }
 
-    @JavaScriptBody(args = {"chart", "i"}, body = "chart.removeData(i);")
+    @JavaScriptBody(args = { "chart", "index", "value", "color", "highlight", "label" }, wait4js = false, body =
+        "chart.addData({ value: value, color: color, highlight : highlight, label : label }, index);"
+    )
+    native static void addData(Object chart, int index, double value, String color, String highlight, String label);
+
+    @JavaScriptBody(args = {"chart", "i"}, wait4js = false, body = "chart.removeData(i);")
     native static void removeData(Object chart, int i);
 
     @JavaScriptBody(args = { "js" }, wait4js = false, body =
@@ -467,6 +472,12 @@ public final class Chart<D, C extends Config> {
         @Override
         public void add(int index, T element) {
             if (isRealized()) {
+                if (elementType == Segment.class) {
+                    Segment s = (Segment) element;
+                    super.add(index, element);
+                    addData(chart, index, s.value, s.color.toString(), s.highlight.toString(), s.label);
+                    return;
+                }
                 throw new UnsupportedOperationException();
             }
             super.add(index, element);
