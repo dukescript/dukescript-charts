@@ -135,8 +135,8 @@ public final class Chart<D, C extends Config> {
         return chart != null;
     }
 
-    final void removeData() {
-        removeData(chart);
+    final void removeData(int index) {
+        removeData(chart, index);
     }
 
     /** Adds a listener to the chart.
@@ -322,8 +322,8 @@ public final class Chart<D, C extends Config> {
         }
     }
 
-    @JavaScriptBody(args = {"chart"}, body = "chart.removeData();")
-    native static void removeData(Object chart);
+    @JavaScriptBody(args = {"chart", "i"}, body = "chart.removeData(i);")
+    native static void removeData(Object chart, int i);
 
     @JavaScriptBody(args = { "js" }, wait4js = false, body =
         "if (js.canvas) js.canvas.removeEventListener('mousedown', js.listener);\n" +
@@ -475,9 +475,9 @@ public final class Chart<D, C extends Config> {
         @Override
         public T remove(int index) {
             if (isRealized()) {
-                if (index == 0) {
-                    T r = super.remove(0);
-                    removeData();
+                if (index == 0 || elementType == Segment.class) {
+                    T r = super.remove(index);
+                    removeData(index);
                     return r;
                 }
                 throw new UnsupportedOperationException();

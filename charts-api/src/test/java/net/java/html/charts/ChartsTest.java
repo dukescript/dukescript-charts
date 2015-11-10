@@ -283,6 +283,31 @@ public class ChartsTest implements Runnable {
             }
         });
         waitForAnimation();
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("segments.length"), 5, "Five segments");
+                assertEquals(chart.eval("segments[0].label"), "Red");
+                assertInt(chart.eval("segments[0].value"), 300, "Three hundred red");
+                assertEquals(chart.eval("segments[2].label"), "Yello");
+                assertInt(chart.eval("segments[2].value"), 100, "Three hundred red");
+
+                chart.getData().remove(2);
+                return null;
+            }
+        });
+        waitForAnimation();
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("segments.length"), 4, "Four segments");
+                assertEquals(chart.eval("segments[0].label"), "Red");
+                assertInt(chart.eval("segments[0].value"), 300, "Three hundred red");
+                assertEquals(chart.eval("segments[2].label"), "Grey");
+                assertInt(chart.eval("segments[2].value"), 40, "Fourty");
+                return null;
+            }
+        });
     }
 
     @AfterMethod
