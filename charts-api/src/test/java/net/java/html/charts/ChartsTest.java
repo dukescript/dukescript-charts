@@ -329,6 +329,17 @@ public class ChartsTest implements Runnable {
                 assertInt(chart.eval("segments[2].value"), 100, "Three hundred red");
                 assertEquals(chart.eval("segments[3].label"), "blue");
                 assertInt(chart.eval("segments[3].value"), 42, "Three hundred red");
+
+                pies.get(0).getData().set(3, new Segment("bluish", 99, null, null));
+                return null;
+            }
+        });
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("segments.length"), 4, "Four segments");
+                assertEquals(chart.eval("segments[3].label"), "bluish");
+                assertInt(chart.eval("segments[3].value"), 99, "Three hundred red");
                 return null;
             }
         });

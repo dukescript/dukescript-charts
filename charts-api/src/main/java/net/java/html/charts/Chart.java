@@ -401,9 +401,17 @@ public final class Chart<D, C extends Config> {
         "for (var i = 0; i < sets; i++) {\n" +
         "  js.datasets[i].points[index].label = title;\n" +
         "  js.datasets[i].points[index].value = values[i];\n" +
-        "}\n"
+        "}\n" +
+        "js.update();\n"
     )
     native static void updateData(Object js, int sets, int index, String title, double[] data);
+
+    @JavaScriptBody(args = { "js", "index", "title", "value" }, wait4js = false, body =
+        "js.segments[index].label = title;\n" +
+        "js.segments[index].value = value;\n" +
+        "js.update();\n"
+    )
+    native static void updateData(Object js, int index, String title, double value);
 
     /*
     static Chart createBar(String id, List<? extends Number> values) {
@@ -539,6 +547,10 @@ public final class Chart<D, C extends Config> {
                         throw new IllegalArgumentException();
                     }
                     updateData(chart, dataSets.length, index, v.label,  v.values);
+                }
+                if (elementType == Segment.class) {
+                    Segment s = (Segment) element;
+                    updateData(chart, index, s.label, s.value);
                 }
             }
             return prev;
