@@ -392,10 +392,18 @@ public final class Chart<D, C extends Config> {
         String[] colors, String[] highlights
     );
 
-    @JavaScriptBody(args = { "js", "data", "title" }, body =
+    @JavaScriptBody(args = { "js", "data", "title" }, wait4js = false, body =
         "js.addData(data, title);"
     )
-    native static Object addData(Object js, Object[] data, String title);
+    native static void addData(Object js, Object[] data, String title);
+
+    @JavaScriptBody(args = { "js", "sets", "index", "title", "values" }, wait4js = false, body =
+        "for (var i = 0; i < sets; i++) {\n" +
+        "  js.datasets[i].points[index].label = title;\n" +
+        "  js.datasets[i].points[index].value = values[i];\n" +
+        "}\n"
+    )
+    native static void updateData(Object js, int sets, int index, String title, double[] data);
 
     /*
     static Chart createBar(String id, List<? extends Number> values) {
@@ -519,6 +527,21 @@ public final class Chart<D, C extends Config> {
                 throw new UnsupportedOperationException();
             }
             return super.remove(index);
+        }
+
+        @Override
+        public T set(int index, T element) {
+            T prev = super.set(index, element);
+            if (isRealized()) {
+                if (elementType == Values.class) {
+                    Values v = (Values) element;
+                    if (dataSets.length != v.values.length) {
+                        throw new IllegalArgumentException();
+                    }
+                    updateData(chart, dataSets.length, index, v.label,  v.values);
+                }
+            }
+            return prev;
         }
     }
 }

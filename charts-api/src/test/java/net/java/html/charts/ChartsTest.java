@@ -74,6 +74,7 @@ public class ChartsTest implements Runnable {
 
     @Test
     public void lineChart() throws Exception {
+        final List<Chart<Values, Config>> lines = new ArrayList<>();
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -86,6 +87,7 @@ public class ChartsTest implements Runnable {
                     Color.rgba(151,187,205,0.2),
                     Color.rgba(151,187,205,1)
                 ));
+                lines.add(lineChart);
                 lineChart.getConfig().callback("onAnimationComplete", ChartsTest.this);
 
                 lineChart.getData().addAll(Arrays.asList(
@@ -137,6 +139,26 @@ public class ChartsTest implements Runnable {
                 assertInt(chart.eval("datasets[1].points.length"), 6, "Just six values set 1");
                 assertInt(chart.eval("datasets[0].points[0].value"), 59, "1st value in 1nd set");
                 assertInt(chart.eval("datasets[1].points[0].value"), 48, "1st value in 2nd set");
+                assertInt(chart.eval("datasets[0].points[3].value"), 56, "4th value in 1st");
+                assertInt(chart.eval("datasets[1].points[3].value"), 86, "4th value in 2nd");
+
+                Chart<Values, Config> ch = lines.get(0);
+                ch.getData().set(3, new Values("New", 13, 26));
+                return null;
+            }
+        });
+
+        run(new Callable<Void>() {
+            @Override
+            public Void call() throws Exception {
+                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
+                assertInt(chart.eval("datasets[0].points.length"), 6, "Just six values set 0");
+                assertInt(chart.eval("datasets[1].points.length"), 6, "Just six values set 1");
+                assertInt(chart.eval("datasets[0].points[3].value"), 13, "4th value in 1st");
+                assertInt(chart.eval("datasets[1].points[3].value"), 26, "4th value in 2nd");
+                assertEquals(chart.eval("datasets[0].points[3].label"), "New", "4th label updated 1");
+                assertEquals(chart.eval("datasets[1].points[3].label"), "New", "4th label updated 2");
+
                 return null;
             }
         });
