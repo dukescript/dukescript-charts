@@ -85,6 +85,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <ignoreBootClassPath>false</ignoreBootClassPath>
+                    <obfuscation>MINIMAL</obfuscation>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
