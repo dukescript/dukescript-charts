@@ -1,14 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.dukescript.charts</groupId>
-    <artifactId>charts-api</artifactId>
+    <artifactId>charts</artifactId>
     <packaging>bundle</packaging>
-    <parent>
-        <groupId>com.dukescript.charts</groupId>
-        <artifactId>pom</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+    <groupId>com.dukescript.api</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <name>Charts API for HTML/Java</name>
+    <description>
+        This is Java version of chartsjs
+        library for rendering of charts via HTML render. The API is
+        distributed as part of the DukeScript project.
+    </description>
+    <properties>
+        <net.java.html.version>1.2.3</net.java.html.version>
+        <bck2brwsr.version>0.16</bck2brwsr.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+    <url>http://dukescript.com</url>
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>http://opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <id>eppleton</id>
+            <name>Anton Epple</name>
+            <email>dukescript@eppleton.de</email>
+            <organization>Eppleton IT Consulting</organization>
+            <organizationUrl>http://www.eppleton.de</organizationUrl>
+            <roles>
+                <role>Project-Administrator</role>
+                <role>Developer</role>
+            </roles>
+            <timezone>+1</timezone>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/dukescript/leaflet4j.git/</connection>
+        <developerConnection>scm:git:https://github.com/dukescript/leaflet4j.git</developerConnection>
+        <tag>release-${releaseVersion}</tag>
+        <url>https://github.com/dukescript/leaflet4j.git</url>
+    </scm>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>org.netbeans.html</groupId>
@@ -19,6 +62,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <version>6.9.9</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.html</groupId>
@@ -27,13 +71,19 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
-    </properties>
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -110,4 +160,75 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>license</id>
+            <activation>
+                <property>
+                    <name>!skipLicenses</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>1.7</version>
+                        <configuration>
+                            <inceptionYear>2015</inceptionYear>
+                            <organizationName>Dukehoff GmbH</organizationName>
+                            <licenseName>mit</licenseName>
+                            <failOnMissingHeader>true</failOnMissingHeader>
+                            <descriptionTemplate>src/license/header.txt</descriptionTemplate>
+                            <roots>
+                                <root>src</root>
+                            </roots>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>first</id>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                                <configuration>
+                                    <licenseName>mit</licenseName>
+                                    <roots>
+                                        <root>src</root>
+                                    </roots>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>check-file-header</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

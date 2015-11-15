@@ -59,6 +59,7 @@
     
     <modules>
         <module>charts-api</module>
+        <module>sample</module>
     </modules>
     
     <distributionManagement>

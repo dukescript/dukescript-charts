@@ -1,6 +1,6 @@
 <!--
   #%L
-  Charts API for HTML/Java - a library from the "DukeScript" project.
+  Charts Sample General Code - a library from the "DukeScript" project.
   %%
   Copyright (C) 2015 Dukehoff GmbH
   %%
@@ -40,19 +40,12 @@
         </style>
     </head>
     <body>
-        <p>
-            Create various types of {@link net.java.html.charts.Chart charts}.
-            Display them
-            using <a href="http://bits.netbeans.org/html+java/">HTML/Java</a>
-            API and other presenters provided by the
-            <a href="http://dukescript.com">DukeScript</a> project.
-        </p>
     <center>
-        <button data-bind="click: bar">Bar Chart</button>
-        <button data-bind="click: pie">Pie Chart</button>
-        <button data-bind="click: line">Line Chart</button>
-        <button data-bind="click: doughnut">Doughnut Chart</button>
-        <button data-bind="click: polar">Polar Chart</button>
+        <button data-bind="click: bar">Bar Graph</button>
+        <button data-bind="click: pie">Pie Graph</button>
+        <button data-bind="click: line">Line Graph</button>
+        <button data-bind="click: doughnut">Doughnut Graph</button>
+        <button data-bind="click: polar">Polar Graph</button>
         <canvas id="chart"></canvas>
         <p>
             Click the chart to increase the values. Hold <em>Shift</em>
@@ -61,11 +54,6 @@
         <textarea rows="15" data-bind="value: code" style="width: 100%">
         </textarea>
     </center>
-<!-- initialize TeaVM -->
-<script type="text/javascript" src="doc-files/teavm.js"></script>
-<script>
-    main();
-</script>
-<!-- end of initialization -->
+<!-- ${browser.bootstrap} -->
     </body>
 </html>
