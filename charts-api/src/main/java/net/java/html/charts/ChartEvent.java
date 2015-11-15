@@ -32,10 +32,14 @@ import java.util.EventObject;
  * {@link ChartListener} methods.
  */
 public final class ChartEvent extends EventObject{
+    private final boolean ctrl;
+    private final boolean shift;
     private final Object[] info;
 
-    ChartEvent(Chart source, Object[] info) {
+    ChartEvent(Chart source, Object shift, Object ctrl, Object[] info) {
         super(source);
+        this.shift = Boolean.TRUE.equals(shift);
+        this.ctrl = Boolean.TRUE.equals(ctrl);
         this.info = info;
     }
 
@@ -55,5 +59,21 @@ public final class ChartEvent extends EventObject{
             arr[i] = ((Number) info[i * 2 + 1]).doubleValue();
         }
         return arr;
+    }
+
+    /** Shift key indication. What the shift key pressed when the event
+     * was delivered.
+     * @return was the shift key pressed?
+     */
+    public boolean isShiftKey() {
+        return shift;
+    }
+
+    /** Ctrl key indication. What the shift key pressed when the event
+     * was delivered.
+     * @return was the ctrl key pressed?
+     */
+    public boolean isCtrlKey() {
+        return ctrl;
     }
 }

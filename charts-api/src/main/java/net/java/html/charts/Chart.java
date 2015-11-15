@@ -308,15 +308,18 @@ public final class Chart<D, C extends Config> {
 "    info.push(arr[i].label);\n" +
 "    info.push(arr[i].value);\n" +
 "  }\n" +
-"  self.@net.java.html.charts.Chart::onClick([Ljava/lang/Object;)(info);\n" +
+"  self.@net.java.html.charts.Chart::onClick([Ljava/lang/Object;[Ljava/lang/Object;)" +
+"    ([event.shiftKey, event.ctrlKey, event.altKey, event.metaKey], info);\n" +
+"  event.stopPropagation();\n" +
+"  event.preventDefault();\n" +
 "}\n"  +
 "graph.canvas = canvas;\n"  +
 "graph.listener = handleClick;\n"
     )
     private native void addListener(String id, String fnName, Object graph);
 
-    final void onClick(Object[] info) {
-        ChartEvent ev = new ChartEvent(this, info);
+    final void onClick(Object[] modifierState, Object[] info) {
+        ChartEvent ev = new ChartEvent(this, modifierState[0], modifierState[1], info);
         for (ChartListener l : Listeners.all(this.listener)) {
             l.chartClick(ev);
         }
