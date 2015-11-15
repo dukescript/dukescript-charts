@@ -62,6 +62,38 @@
         <textarea rows="15" data-bind="value: code" style="width: 100%">
         </textarea>
     </center>
+    <p>
+        To use this library from your
+        <a target="_blank" href="http://dukescript.com">DukeScript</a> application follow
+        the <a target="_blank" href="https://dukescript.com/getting_started.html">getting started tutorial</a>
+        and then add dependency on the <b>Charts API</b> to your
+        <code>client/pom.xml</code>:
+    </p>
+    <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;com.dukescript.api&lt;/groupId&gt;
+  &lt;artifactId&gt;charts&lt;/artifactId&gt;
+  &lt;version&gt;0.8&lt;/version&gt; &lt-- or any newer --&gt;
+  &lt;type&gt;jar&lt;/type&gt;
+&lt;/dependency&gt;
+    </pre>
+    <p>
+        If you are also using <code>client-web/pom.xml</code> consider to include
+        pre-built <a target="_blank" href="http://bck2brwsr.apidesign.org">Bck2Brwsr Library</a>
+        as
+    </p>
+    <pre>
+&lt;dependency&gt;
+  &lt;groupId&gt;com.dukescript.api&lt;/groupId&gt;
+  &lt;artifactId&gt;charts&lt;/artifactId&gt;
+  &lt;version&gt;0.8&lt;/version&gt; &lt-- the same as above --&gt;
+  &lt;classifier&gt;bck2brwsr&lt;/classifier&gt;
+&lt;/dependency&gt;
+    </pre>
+    <p>
+        Including this pre-built library will speed your compilation time up.
+    </p>
+
 <!-- initialize TeaVM -->
 <script type="text/javascript" src="doc-files/teavm.js"></script>
 <script>
