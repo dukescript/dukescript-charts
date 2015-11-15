@@ -397,14 +397,14 @@ public final class Chart<D, C extends Config> {
     )
     native static void addData(Object js, Object[] data, String title);
 
-    @JavaScriptBody(args = { "js", "sets", "index", "title", "values" }, wait4js = false, body =
+    @JavaScriptBody(args = { "js", "type", "sets", "index", "title", "values" }, wait4js = false, body =
         "for (var i = 0; i < sets; i++) {\n" +
-        "  js.datasets[i].points[index].label = title;\n" +
-        "  js.datasets[i].points[index].value = values[i];\n" +
+        "  js.datasets[i][type][index].label = title;\n" +
+        "  js.datasets[i][type][index].value = values[i];\n" +
         "}\n" +
         "js.update();\n"
     )
-    native static void updateData(Object js, int sets, int index, String title, double[] data);
+    native static void updateData(Object js, String type, int sets, int index, String title, double[] data);
 
     @JavaScriptBody(args = { "js", "index", "title", "value" }, wait4js = false, body =
         "js.segments[index].label = title;\n" +
@@ -546,7 +546,18 @@ public final class Chart<D, C extends Config> {
                     if (dataSets.length != v.values.length) {
                         throw new IllegalArgumentException();
                     }
-                    updateData(chart, dataSets.length, index, v.label,  v.values);
+                    String dataType;
+                    switch (type) {
+                        case "Line":
+                            dataType = "points";
+                            break;
+                        case "Bar":
+                            dataType = "bars";
+                            break;
+                        default:
+                            throw new IllegalStateException();
+                    }
+                    updateData(chart, dataType, dataSets.length, index, v.label,  v.values);
                 }
                 if (elementType == Segment.class) {
                     Segment s = (Segment) element;
