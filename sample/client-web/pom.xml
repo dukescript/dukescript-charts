@@ -238,7 +238,7 @@
                                     <sourceMapsGenerated>${teavm.debug}</sourceMapsGenerated>
                                     <sourceFilesCopied>${teavm.debug}</sourceFilesCopied>
                                     <!-- Whether we want TeaVM to minify (obfuscate) the generated JavaScript -->
-                                    <minifying>false</minifying>
+                                    <minifying>true</minifying>
                                     <!-- Don't include main page - we created it by ourselves -->
                                     <mainPageIncluded>false</mainPageIncluded>
                                     <!-- Merge runtime.js instead of putting as a separate file -->
