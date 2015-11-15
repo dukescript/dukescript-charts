@@ -552,6 +552,7 @@ public final class Chart<D, C extends Config> {
                     String dataType;
                     switch (type) {
                         case "Line":
+                        case "Radar":
                             dataType = "points";
                             break;
                         case "Bar":
