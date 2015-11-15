@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style>
+            body {
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+        </style>
+    </head>
+    <body>
+        <p>
+            Create various types of {@link net.java.html.charts.Chart charts}.
+            Display them
+            using <a href="http://bits.netbeans.org/html+java/">HTML/Java</a>
+            API and other presenters provided by the
+            <a href="http://dukescript.com">DukeScript</a> project.
+        </p>
+    <center>
+        <button data-bind="click: bar">Bar Chart</button>
+        <button data-bind="click: pie">Pie Chart</button>
+        <button data-bind="click: line">Line Chart</button>
+        <button data-bind="click: doughnut">Doughnut Chart</button>
+        <button data-bind="click: polar">Polar Chart</button>
+        <canvas id="chart"></canvas>
+        <p>
+            Click the chart to increase the values. Hold <em>Shift</em>
+            to decrease, hold <em>Ctrl</em> to modify the value by ten.
+        </p>
+        <textarea rows="15" data-bind="value: code" style="width: 100%">
+        </textarea>
+    </center>
+<!-- initialize TeaVM -->
+<script type="text/javascript" src="doc-files/teavm.js"></script>
+<script>
+    main();
+</script>
+<!-- end of initialization -->
+    </body>
+</html>
