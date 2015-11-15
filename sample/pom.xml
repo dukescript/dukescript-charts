@@ -18,7 +18,6 @@
         <module>client</module>
         <module>client-web</module>
         <module>client-netbeans</module>
-        <module>client-android</module>
         <module>client-ios</module>
     </modules>
     <properties>
@@ -60,4 +59,17 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>android</id>
+            <activation>
+                <property>
+                    <name>android.sdk.path</name>
+                </property>
+            </activation>
+            <modules>
+                <module>client-android</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>
