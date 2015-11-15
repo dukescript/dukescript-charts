@@ -72,7 +72,7 @@ public final class ChartModel {
         }
         ui = new Data();
         ui.applyBindings();
-        lineLike(ui, false);
+        lineLike(ui, 0);
     }
 
     @ModelOperation
@@ -114,38 +114,45 @@ public final class ChartModel {
         model.setCode(sb.toString());
     }
     
-    static void lineLike(Data model, boolean line) {
+    static void lineLike(Data model, int type) {
         StringBuilder sb = new StringBuilder();
         final Color c1 = PALETTE[nextPaletteIndex()];
         final Color c2 = PALETTE[nextPaletteIndex()];
         final Values.Set values = new Values.Set("Months", c1, c2);
 
-        Chart<Values, Config> bar = line ?
-            Chart.createLine(values)
-            : Chart.createBar(values);
-
         sb.append("// import net.java.html.charts.*;\n");
         sb.append("Chart<Values, Config> chart = Chart.");
-        if (line) {
-            sb.append("createLine(");
-        } else {
-            sb.append("createBar(");
+
+        Chart<Values, Config> valueChart;
+        switch (type) {
+            case 0:
+                valueChart = Chart.createBar(values);
+                sb.append("createBar(");
+                break;
+            case 1:
+                valueChart = Chart.createLine(values);
+                sb.append("createLine(");
+                break;
+            default:
+                valueChart = Chart.createRadar(values);
+                sb.append("createRadar(");
+                break;
         }
         sb.append("new Values.Set(\"Months\", Color.valueOf(\"");
         sb.append(c1).append("\"), Color.valueOf(\"").append(c2).append("\")));\n");
 
-        List<Values> data = bar.getData();
+        List<Values> data = valueChart.getData();
         for (int i = 0; i < 12; i++) {
             data.add(new Values(NAMES[i], VALUES[i]));
             sb.append("chart.getData().add(new Values(\"").append(NAMES[i]).append("\", ").append(VALUES[i]).append("));\n");
         }
-        bar.addChartListener(new AddOne(bar));
-        bar.applyTo("chart");
+        valueChart.addChartListener(new AddOne(valueChart));
+        valueChart.applyTo("chart");
         sb.append("chart.applyTo(\"chart\");\n");
         if (chart != null) {
             chart.destroy();
         }
-        chart = bar;
+        chart = valueChart;
         model.setCode(sb.toString());
     }
 
@@ -163,11 +170,15 @@ public final class ChartModel {
     }
     @Function
     static void line(Data model) {
-        lineLike(model, true);
+        lineLike(model, 1);
     }
     @Function
     static void bar(Data model) {
-        lineLike(model, false);
+        lineLike(model, 0);
+    }
+    @Function
+    static void radar(Data model) {
+        lineLike(model, 2);
     }
 
 
