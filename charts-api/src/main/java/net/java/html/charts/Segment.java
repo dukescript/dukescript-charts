@@ -51,4 +51,12 @@ public final class Segment {
         this.color = color;
         this.highlight = highlight;
     }
+
+    /**
+     * Label associated with this segment.
+     * @return string passed as <code>label</code> into the {@link #Segment(java.lang.String, double, net.java.html.charts.Color, net.java.html.charts.Color) constructor}
+     */
+    public String getLabel() {
+        return label;
+    }
 }

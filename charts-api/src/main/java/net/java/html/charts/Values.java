@@ -46,6 +46,14 @@ public final class Values {
         this.values = values;
     }
 
+    /**
+     * Label associated with this "column" of values.
+     * @return string passed as <code>label</code> into the {@link #Values(java.lang.String, double...) constructor}
+     */
+    public String getLabel() {
+        return label;
+    }
+
     /** Set of {@link Values values} for 
      * {@link Chart#createLine(net.java.html.charts.Values.Set...) line},
      * {@link Chart#createRadar(net.java.html.charts.Values.Set...) radar} or
