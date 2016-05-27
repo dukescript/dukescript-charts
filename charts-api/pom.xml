@@ -63,6 +63,7 @@
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.9.9</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.netbeans.html</groupId>
