@@ -298,18 +298,18 @@ public final class Chart<D, C extends Config> {
 "canvas.addEventListener('mousedown', handleClick, false);\n" +
 "function handleClick(event)\n" +
 "{\n" +
-"  var x = event.x;\n" +
-"  var y = event.y;\n" +
-"  x -= canvas.offsetLeft;\n" +
-"  y -= canvas.offsetTop;\n" +
+"  var x = event['x'];\n" +
+"  var y = event['y'];\n" +
+"  x -= canvas['offsetLeft'];\n" +
+"  y -= canvas['offsetTop'];\n" +
 "  var arr = graph[fnName](event);\n" +
 "  var info = [];\n" +
 "  for (var i = 0; i < arr.length; i++) {\n" +
-"    info.push(arr[i].label);\n" +
-"    info.push(arr[i].value);\n" +
+"    info.push(arr[i]['label']);\n" +
+"    info.push(arr[i]['value']);\n" +
 "  }\n" +
 "  self.@net.java.html.charts.Chart::onClick([Ljava/lang/Object;[Ljava/lang/Object;)" +
-"    ([event.shiftKey, event.ctrlKey, event.altKey, event.metaKey], info);\n" +
+"    ([event['shiftKey'], event['ctrlKey'], event['altKey'], event['metaKey']], info);\n" +
 "  event.stopPropagation();\n" +
 "  event.preventDefault();\n" +
 "}\n"  +
@@ -326,21 +326,21 @@ public final class Chart<D, C extends Config> {
     }
 
     @JavaScriptBody(args = { "chart", "index", "value", "color", "highlight", "label" }, wait4js = false, body =
-        "chart.addData({ value: value, color: color, highlight : highlight, label : label }, index);"
+        "chart['addData']({ 'value': value, 'color': color, 'highlight' : highlight, 'label' : label }, index);"
     )
     native static void addData(Object chart, int index, double value, String color, String highlight, String label);
 
     @JavaScriptBody(args = { "chart", "data", "label" }, wait4js = false, body =
-        "chart.addData(data, label);"
+        "chart['addData'](data, label);"
     )
     native static void addData(Object chart, double[] data, String label);
 
-    @JavaScriptBody(args = {"chart", "i"}, wait4js = false, body = "chart.removeData(i);")
+    @JavaScriptBody(args = {"chart", "i"}, wait4js = false, body = "chart['removeData'](i);")
     native static void removeData(Object chart, int i);
 
     @JavaScriptBody(args = { "js" }, wait4js = false, body =
-        "if (js.canvas) js.canvas.removeEventListener('mousedown', js.listener);\n" +
-        "js.destroy();\n"
+        "if (js['canvas']) js['canvas']['removeEventListener']('mousedown', js['listener']);\n" +
+        "js['destroy']();\n"
     )
     native static void destroy(Object js);
 
@@ -356,17 +356,17 @@ public final class Chart<D, C extends Config> {
         "var dataSets = [];\n" +
         "for (var i = 0; i < labels.length; i++) {\n" +
         "  dataSets.push({\n" +
-        "    label : labels[i][0],\n" +
-        "    fillColor: labels[i][1],\n" +
-        "    strokeColor: labels[i][2],\n" +
-        "    highlightFill: labels[i][3],\n" +
-        "    highlightStroke: labels[i][4],\n" +
-        "    data: labels[i][5]\n" +
+        "    'label' : labels[i][0],\n" +
+        "    'fillColor': labels[i][1],\n" +
+        "    'strokeColor': labels[i][2],\n" +
+        "    'highlightFill': labels[i][3],\n" +
+        "    'highlightStroke': labels[i][4],\n" +
+        "    'data': labels[i][5]\n" +
         "  });\n" +
         "}\n" +
         "var data = {\n" +
-        "  labels : names,\n" +
-        "  datasets : dataSets\n" +
+        "  'labels' : names,\n" +
+        "  'datasets' : dataSets\n" +
         "};\n" +
         "var graph = new Chart(ctx)[type](data, config);\n" +
         "return graph;\n"
@@ -396,23 +396,23 @@ public final class Chart<D, C extends Config> {
     );
 
     @JavaScriptBody(args = { "js", "data", "title" }, wait4js = false, body =
-        "js.addData(data, title);"
+        "js['addData'](data, title);"
     )
     native static void addData(Object js, Object[] data, String title);
 
     @JavaScriptBody(args = { "js", "type", "sets", "index", "title", "values" }, wait4js = false, body =
         "for (var i = 0; i < sets; i++) {\n" +
-        "  js.datasets[i][type][index].label = title;\n" +
-        "  js.datasets[i][type][index].value = values[i];\n" +
+        "  js['datasets'][i][type][index]['label'] = title;\n" +
+        "  js['datasets'][i][type][index]['value'] = values[i];\n" +
         "}\n" +
-        "js.update();\n"
+        "js['update']();\n"
     )
     native static void updateData(Object js, String type, int sets, int index, String title, double[] data);
 
     @JavaScriptBody(args = { "js", "index", "title", "value" }, wait4js = false, body =
-        "js.segments[index].label = title;\n" +
-        "js.segments[index].value = value;\n" +
-        "js.update();\n"
+        "js['segments'][index]['label'] = title;\n" +
+        "js['segments'][index]['value'] = value;\n" +
+        "js['update']();\n"
     )
     native static void updateData(Object js, int index, String title, double value);
 
