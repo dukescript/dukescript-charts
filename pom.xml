@@ -37,8 +37,8 @@
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <net.java.html.version>1.3</net.java.html.version>
-        <bck2brwsr.version>0.19</bck2brwsr.version>
+        <net.java.html.version>1.4</net.java.html.version>
+        <bck2brwsr.version>0.21</bck2brwsr.version>
         <license>COPYING</license>
     </properties>
    
