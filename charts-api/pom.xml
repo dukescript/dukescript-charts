@@ -41,10 +41,10 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:https://github.com/dukescript/leaflet4j.git/</connection>
-        <developerConnection>scm:git:https://github.com/dukescript/leaflet4j.git</developerConnection>
+        <connection>scm:git:https://github.com/dukescript/dukescript-charts/</connection>
+        <developerConnection>scm:git:https://github.com/dukescript/dukescript-charts.git</developerConnection>
         <tag>release-${releaseVersion}</tag>
-        <url>https://github.com/dukescript/leaflet4j.git</url>
+        <url>https://github.com/dukescript/dukescript-charts.git</url>
     </scm>
     <distributionManagement>
         <snapshotRepository>
