@@ -32,7 +32,7 @@ import net.java.html.js.JavaScriptBody;
  * Generic configuration object.
  * Allows to set any property via {@link #set(java.lang.String, java.lang.Object)}
  * method. The list of supported properties is available at
- * <a href="http://www.chartjs.org/docs/#getting-started-global-chart-configuration">
+ * <a href="https://github.com/chartjs/Chart.js/blob/v1.0.2/docs/00-Getting-Started.md">
  * Global Chart Configuration</a>.
  */
 public class Config {
@@ -50,7 +50,7 @@ public class Config {
     }
 
     /** Assigns a value to the config object. The list of supported properties is available at
-     * <a href="http://www.chartjs.org/docs/#getting-started-global-chart-configuration">
+     * <a href="https://github.com/chartjs/Chart.js/blob/v1.0.2/docs/00-Getting-Started.md">
      * Global Chart Configuration</a>.
      *
      * @param propertyName name of the property
@@ -65,7 +65,7 @@ public class Config {
 
     /** Assigns a callback to the config object. The list of supported callback names
      * is available at
-     * <a href="http://www.chartjs.org/docs/#getting-started-global-chart-configuration">
+     * <a href="https://github.com/chartjs/Chart.js/blob/v1.0.2/docs/00-Getting-Started.md">
      * Global Chart Configuration</a> - just search for the properties to which
      * a <b>function</b> can be assigned.
      *
