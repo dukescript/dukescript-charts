@@ -17,24 +17,11 @@
     <name>Charts Sample for NetBeans</name>
 
     <properties>
-        <netbeans.version>RELEASE81</netbeans.version>
+        <netbeans.version>RELEASE124</netbeans.version>
         <netbeans.compile.on.save>none</netbeans.compile.on.save>
         <project.mainclass>com.dukescript.charts.sample.NbMain</project.mainclass>
     </properties>
     <repositories>
-        <repository>
-            <id>netbeans</id>
-            <name>NetBeans</name>
-            <url>http://bits.netbeans.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>dev</id>
-            <name>NetBeans</name>
-            <url>http://bits.netbeans.org/nexus/content/repositories/snapshots/</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
     <build>
         <plugins>
@@ -193,12 +180,22 @@
                     <groupId>org.netbeans.html</groupId>
                     <artifactId>net.java.html.boot.fx</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.netbeans.html</groupId>
             <artifactId>net.java.html.boot</artifactId>
             <version>${net.java.html.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.netbeans.html</groupId>
@@ -210,12 +207,107 @@
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-api-htmlui</artifactId>
             <version>${netbeans.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.boot</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.boot.fx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.json</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.sound</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>ko4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>xhr4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.netbeans.cluster</groupId>
             <artifactId>platform</artifactId>
             <version>${netbeans.version}</version>
             <type>pom</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.boot</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.boot.fx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.boot.script</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.json</artifactId>
+                </exclusion>
+                    <exclusion>
+                        <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.geo</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>net.java.html.sound</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>ko4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
+                    <artifactId>xhr4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.html</groupId>
+            <artifactId>net.java.html.boot.script</artifactId>
+            <version>${net.java.html.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.html</groupId>
+            <artifactId>net.java.html.geo</artifactId>
+            <version>${net.java.html.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.html</groupId>
+            <artifactId>net.java.html</artifactId>
+            <version>${net.java.html.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.html</groupId>
+            <artifactId>xhr4j</artifactId>
+            <version>${net.java.html.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.html</groupId>
+            <artifactId>ko4j</artifactId>
+            <version>${net.java.html.version}</version>
+            <scope>runtime</scope>
         </dependency>
     </dependencies>
 </project>

@@ -126,9 +126,8 @@ public final class Chart<D, C extends Config> {
         addListener(id, clickLocationFn, chart);
     }
 
-    // for testing purposes
-    final Object eval(String t) {
-        return eval(t, chart);
+    final Object chartJs() {
+        return chart;
     }
 
     final boolean isRealized() {
@@ -343,12 +342,6 @@ public final class Chart<D, C extends Config> {
         "js['destroy']();\n"
     )
     native static void destroy(Object js);
-
-    @JavaScriptBody(args = {"t", "chart" }, body =
-        "with (chart) { return eval(t) }"
-    )
-    native static Object eval(String t, Object chart);
-
 
     @JavaScriptBody(args = { "id", "type", "config", "labels", "names"}, body =
         "var canvas = document.getElementById(id);\n" +

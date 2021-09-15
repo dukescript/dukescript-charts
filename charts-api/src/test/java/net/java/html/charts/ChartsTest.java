@@ -36,6 +36,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import javafx.application.Platform;
 import net.java.html.boot.BrowserBuilder;
+import net.java.html.js.JavaScriptBody;
 import org.netbeans.html.boot.spi.Fn;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -113,13 +114,13 @@ public class ChartsTest implements Runnable {
         class CheckRenderAndRemove1st implements Callable<Void> {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
-                assertEquals(chart.eval("datasets[0].label"), "My First dataset");
-                assertInt(chart.eval("datasets[0].points.length"), 7, "Seven values set 0");
-                assertInt(chart.eval("datasets[1].points.length"), 7, "Seven values set 1");
-                assertInt(chart.eval("datasets[1].points[0].value"), 28, "1st value in 2nd set");
-                assertEquals(chart.eval("datasets[1].points[0].label"), "January", "1st label");
-                assertEquals(chart.eval("datasets[1].points[0].datasetLabel"), "My Second dataset", "2nd data set label");
+                assertInt(evalChart(chart, "chart.datasets.length"), 2, "Two datasets");
+                assertEquals(evalChart(chart, "chart.datasets[0].label"), "My First dataset");
+                assertInt(evalChart(chart, "chart.datasets[0].points.length"), 7, "Seven values set 0");
+                assertInt(evalChart(chart, "chart.datasets[1].points.length"), 7, "Seven values set 1");
+                assertInt(evalChart(chart, "chart.datasets[1].points[0].value"), 28, "1st value in 2nd set");
+                assertEquals(evalChart(chart, "chart.datasets[1].points[0].label"), "January", "1st label");
+                assertEquals(evalChart(chart, "chart.datasets[1].points[0].datasetLabel"), "My Second dataset", "2nd data set label");
 
                 chart.getData().remove(0);
                 return null;
@@ -134,13 +135,13 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
-                assertInt(chart.eval("datasets[0].points.length"), 6, "Just six values set 0");
-                assertInt(chart.eval("datasets[1].points.length"), 6, "Just six values set 1");
-                assertInt(chart.eval("datasets[0].points[0].value"), 59, "1st value in 1nd set");
-                assertInt(chart.eval("datasets[1].points[0].value"), 48, "1st value in 2nd set");
-                assertInt(chart.eval("datasets[0].points[3].value"), 56, "4th value in 1st");
-                assertInt(chart.eval("datasets[1].points[3].value"), 86, "4th value in 2nd");
+                assertInt(evalChart(chart, "chart.datasets.length"), 2, "Two datasets");
+                assertInt(evalChart(chart, "chart.datasets[0].points.length"), 6, "Just six values set 0");
+                assertInt(evalChart(chart, "chart.datasets[1].points.length"), 6, "Just six values set 1");
+                assertInt(evalChart(chart, "chart.datasets[0].points[0].value"), 59, "1st value in 1nd set");
+                assertInt(evalChart(chart, "chart.datasets[1].points[0].value"), 48, "1st value in 2nd set");
+                assertInt(evalChart(chart, "chart.datasets[0].points[3].value"), 56, "4th value in 1st");
+                assertInt(evalChart(chart, "chart.datasets[1].points[3].value"), 86, "4th value in 2nd");
 
                 Chart<Values, Config> ch = lines.get(0);
                 ch.getData().set(3, new Values("New", 13, 26));
@@ -151,13 +152,13 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
-                assertInt(chart.eval("datasets[0].points.length"), 6, "Just six values set 0");
-                assertInt(chart.eval("datasets[1].points.length"), 6, "Just six values set 1");
-                assertInt(chart.eval("datasets[0].points[3].value"), 13, "4th value in 1st");
-                assertInt(chart.eval("datasets[1].points[3].value"), 26, "4th value in 2nd");
-                assertEquals(chart.eval("datasets[0].points[3].label"), "New", "4th label updated 1");
-                assertEquals(chart.eval("datasets[1].points[3].label"), "New", "4th label updated 2");
+                assertInt(evalChart(chart, "chart.datasets.length"), 2, "Two datasets");
+                assertInt(evalChart(chart, "chart.datasets[0].points.length"), 6, "Just six values set 0");
+                assertInt(evalChart(chart, "chart.datasets[1].points.length"), 6, "Just six values set 1");
+                assertInt(evalChart(chart, "chart.datasets[0].points[3].value"), 13, "4th value in 1st");
+                assertInt(evalChart(chart, "chart.datasets[1].points[3].value"), 26, "4th value in 2nd");
+                assertEquals(evalChart(chart, "chart.datasets[0].points[3].label"), "New", "4th label updated 1");
+                assertEquals(evalChart(chart, "chart.datasets[1].points[3].label"), "New", "4th label updated 2");
 
                 return null;
             }
@@ -238,11 +239,11 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
-                assertInt(chart.eval("datasets[0].points.length"), 7, "Seven values set 0");
-                assertInt(chart.eval("datasets[1].points.length"), 7, "Seven values set 1");
-                assertInt(chart.eval("datasets[0].points[6].value"), 40, "6th value in 1nd set");
-                assertInt(chart.eval("datasets[1].points[6].value"), 90, "6th value in 2nd set");
+                assertInt(evalChart(chart, "chart.datasets.length"), 2, "Two datasets");
+                assertInt(evalChart(chart, "chart.datasets[0].points.length"), 7, "Seven values set 0");
+                assertInt(evalChart(chart, "chart.datasets[1].points.length"), 7, "Seven values set 1");
+                assertInt(evalChart(chart, "chart.datasets[0].points[6].value"), 40, "6th value in 1nd set");
+                assertInt(evalChart(chart, "chart.datasets[1].points[6].value"), 90, "6th value in 2nd set");
 
                 radars.get(0).getData().add(new Values("Dec", 12, 144));
                 return null;
@@ -252,11 +253,11 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("datasets.length"), 2, "Two datasets");
-                assertInt(chart.eval("datasets[0].points.length"), 8, "Eight values set 0");
-                assertInt(chart.eval("datasets[1].points.length"), 8, "Eight values set 1");
-                assertInt(chart.eval("datasets[0].points[7].value"), 12, "8th value in 1nd set");
-                assertInt(chart.eval("datasets[1].points[7].value"), 144, "8th value in 2nd set");
+                assertInt(evalChart(chart, "chart.datasets.length"), 2, "Two datasets");
+                assertInt(evalChart(chart, "chart.datasets[0].points.length"), 8, "Eight values set 0");
+                assertInt(evalChart(chart, "chart.datasets[1].points.length"), 8, "Eight values set 1");
+                assertInt(evalChart(chart, "chart.datasets[0].points[7].value"), 12, "8th value in 1nd set");
+                assertInt(evalChart(chart, "chart.datasets[1].points[7].value"), 144, "8th value in 2nd set");
                 return null;
             }
         });
@@ -312,9 +313,9 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("segments.length"), 3, "Three segments");
-                assertEquals(chart.eval("segments[2].label"), "blue");
-                assertInt(chart.eval("segments[2].value"), 42, "Three hundred red");
+                assertInt(evalChart(chart, "chart.segments.length"), 3, "Three segments");
+                assertEquals(evalChart(chart, "chart.segments[2].label"), "blue");
+                assertInt(evalChart(chart, "chart.segments[2].value"), 42, "Three hundred red");
 
                 pies.get(0).getData().add(2, new Segment("black", 100, Color.rgba(0, 0, 0, 0), Color.valueOf("black")));
                 return null;
@@ -324,11 +325,11 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("segments.length"), 4, "Four segments");
-                assertEquals(chart.eval("segments[2].label"), "black");
-                assertInt(chart.eval("segments[2].value"), 100, "Three hundred red");
-                assertEquals(chart.eval("segments[3].label"), "blue");
-                assertInt(chart.eval("segments[3].value"), 42, "Three hundred red");
+                assertInt(evalChart(chart, "chart.segments.length"), 4, "Four segments");
+                assertEquals(evalChart(chart, "chart.segments[2].label"), "black");
+                assertInt(evalChart(chart, "chart.segments[2].value"), 100, "Three hundred red");
+                assertEquals(evalChart(chart, "chart.segments[3].label"), "blue");
+                assertInt(evalChart(chart, "chart.segments[3].value"), 42, "Three hundred red");
 
                 pies.get(0).getData().set(3, new Segment("bluish", 99, null, null));
                 return null;
@@ -337,9 +338,9 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("segments.length"), 4, "Four segments");
-                assertEquals(chart.eval("segments[3].label"), "bluish");
-                assertInt(chart.eval("segments[3].value"), 99, "Three hundred red");
+                assertInt(evalChart(chart, "chart.segments.length"), 4, "Four segments");
+                assertEquals(evalChart(chart, "chart.segments[3].label"), "bluish");
+                assertInt(evalChart(chart, "chart.segments[3].value"), 99, "Three hundred red");
                 return null;
             }
         });
@@ -371,11 +372,11 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("segments.length"), 5, "Five segments");
-                assertEquals(chart.eval("segments[0].label"), "Red");
-                assertInt(chart.eval("segments[0].value"), 300, "Three hundred red");
-                assertEquals(chart.eval("segments[2].label"), "Yello");
-                assertInt(chart.eval("segments[2].value"), 100, "Three hundred red");
+                assertInt(evalChart(chart, "chart.segments.length"), 5, "Five segments");
+                assertEquals(evalChart(chart, "chart.segments[0].label"), "Red");
+                assertInt(evalChart(chart, "chart.segments[0].value"), 300, "Three hundred red");
+                assertEquals(evalChart(chart, "chart.segments[2].label"), "Yello");
+                assertInt(evalChart(chart, "chart.segments[2].value"), 100, "Three hundred red");
 
                 chart.getData().remove(2);
                 return null;
@@ -385,11 +386,11 @@ public class ChartsTest implements Runnable {
         run(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
-                assertInt(chart.eval("segments.length"), 4, "Four segments");
-                assertEquals(chart.eval("segments[0].label"), "Red");
-                assertInt(chart.eval("segments[0].value"), 300, "Three hundred red");
-                assertEquals(chart.eval("segments[2].label"), "Grey");
-                assertInt(chart.eval("segments[2].value"), 40, "Fourty");
+                assertInt(evalChart(chart, "chart.segments.length"), 4, "Four segments");
+                assertEquals(evalChart(chart, "chart.segments[0].label"), "Red");
+                assertInt(evalChart(chart, "chart.segments[0].value"), 300, "Three hundred red");
+                assertEquals(evalChart(chart, "chart.segments[2].label"), "Grey");
+                assertInt(evalChart(chart, "chart.segments[2].value"), 40, "Fourty");
                 return null;
             }
         });
@@ -464,4 +465,12 @@ public class ChartsTest implements Runnable {
             fail("Expecting number: " + real);
         }
     }
+    private static Object evalChart(Chart<?, ?> chart, String code) {
+        return evalJs(chart.chartJs(), code);
+    }
+
+    @JavaScriptBody(args = { "chart", "code" }, body = "\n"
+            + "return eval(code);\n"
+    )
+    private static native Object evalJs(Object chart, String code);
 }
