@@ -4,7 +4,7 @@
     <artifactId>charts</artifactId>
     <packaging>bundle</packaging>
     <groupId>com.dukescript.api</groupId>
-    <version>2.0-SNAPSHOT</version>
+    <version>1.1</version>
     <name>Charts API for HTML/Java</name>
     <description>
         This is Java version of chartsjs
