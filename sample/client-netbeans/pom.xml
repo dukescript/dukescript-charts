@@ -41,19 +41,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <executions>
-                    <execution>
-                        <id>default-compile</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>3.8.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.frgaal</groupId>
+                        <artifactId>compiler-maven-plugin</artifactId>
+                        <version>21.0.0</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <compilerId>frgaal</compilerId>
+                    <source>21</source>
+                    <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -72,6 +74,9 @@
                 <configuration>
                     <!-- to have the jar plugin pickup the nbm generated manifest -->
                     <useDefaultManifestFile>true</useDefaultManifestFile>
+                    <manifestEntries>
+                        <Multi-Release>true</Multi-Release>
+                    </manifestEntries>
                 </configuration>
             </plugin>
             <plugin>
@@ -264,8 +269,8 @@
                     <groupId>org.netbeans.html</groupId>
                     <artifactId>net.java.html.json</artifactId>
                 </exclusion>
-                    <exclusion>
-                        <groupId>org.netbeans.html</groupId>
+                <exclusion>
+                    <groupId>org.netbeans.html</groupId>
                     <artifactId>net.java.html.geo</artifactId>
                 </exclusion>
                 <exclusion>
