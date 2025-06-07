@@ -17,9 +17,9 @@
     <name>Charts Sample for iOS</name>
 
     <properties>
-        <project.mainclass>com.dukescript.charts.iOSMain</project.mainclass>
+        <project.mainclass>com.dukescript.charts.sample.iOSMain</project.mainclass>
         <netbeans.compile.on.save>none</netbeans.compile.on.save>
-        <robovm.version>1.6.0</robovm.version>
+        <robovm.version>2.3.14</robovm.version>
     </properties>
     <build>
         <plugins>
@@ -186,7 +186,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.robovm</groupId>
+                <groupId>com.mobidevelop.robovm</groupId>
                 <artifactId>robovm-maven-plugin</artifactId>
                 <version>${robovm.version}</version>
                 <configuration>
@@ -259,13 +259,13 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>org.robovm</groupId>
+            <groupId>com.mobidevelop.robovm</groupId>
             <artifactId>robovm-cocoatouch</artifactId>
             <version>${robovm.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
-            <groupId>org.robovm</groupId>
+            <groupId>com.mobidevelop.robovm</groupId>
             <artifactId>robovm-rt</artifactId>
             <version>${robovm.version}</version>
             <type>jar</type>
